@@ -27,6 +27,6 @@ jobs:
           switches: -avzr --delete
           path: ./*
           remote_path: /discordBots/
-          remote_host:  ubuntu@ec2-3-131-94-181.us-east-2.compute.amazonaws.com
+          remote_host:  ec2-3-131-94-181.us-east-2.compute.amazonaws.com
           remote_user: ubuntu
           remote_key: "${{ secrets.PILOT_EC2_KEY }}"
