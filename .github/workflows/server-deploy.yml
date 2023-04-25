@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v1
-      - name: rsync deployments
       
       - name: Deploy to EC2
         uses: easingthemes/ssh-deploy@v2.1.5
