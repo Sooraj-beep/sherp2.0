@@ -1,33 +1,37 @@
-name: remote ssh command to deploy
+name: CI
+
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
 
 jobs:
-  show-context:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Show github context object
-        run: echo $JSON
-        env:
-          JSON: ${{ toJSON(github) }}
-  test:
-    runs-on: ubuntu-latest
-    name: Typical Usage of OpenVPN
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - run: |
-          sudo apt update
-          sudo apt install -y openvpn openvpn-systemd-resolved
-      - name: Connect to VPN
-        uses: actions/checkout@v3
-        with:
-          config_file: ./github/workflows/client.ovpn
-          username: ${{ secrets.VPN_USERNAME }}
-          password: ${{ secrets.VPN_PASSWORD }}
-          client_key: ${{ secrets.VPN_USER_KEY }}
+  build:
 
-      - name: kill vpn
-        if: always()
-        run: sudo killall openvpn
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/master'
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test
+
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@5.1
+        with:
+          switches: -avzr --delete
+          path: ./*
+          remote_path: /discordBots/
+          remote_host:  ubuntu@ec2-3-131-94-181.us-east-2.compute.amazonaws.com
+          remote_user: ubuntu
+          remote_key: "${{ secrets.PILOT_EC2_KEY }}"
