@@ -11,8 +11,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+      
     steps:
+      - run: | 
+         sudo -i
+         cd ..
       - uses: actions/checkout@v3
       - name: Deploy to EC2
         uses: easingthemes/ssh-deploy@v2.1.5
