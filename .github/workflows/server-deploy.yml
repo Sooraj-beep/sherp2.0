@@ -7,24 +7,18 @@ on:
     branches: [ master ]
 
   workflow_dispatch:
-
+  
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-      
     steps:
-      - run: | 
-         sudo -i
-         cd ..
-         ls
-         mkdir -p home/sooraj/sherp3
-         chmod +x home/sooraj/sherp3
-      - uses: actions/checkout@v3
-      - name: Deploy to EC2
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.PILOT_EC2_KEY }}
-          SOURCE: "./"
-          REMOTE_HOST: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
-          REMOTE_USER: "ubuntu"
-          TARGET: "/home/sooraj/sherp2"
+    - uses: actions/checkout@v2
+    - name: rsync deployments
+      uses: burnett01/rsync-deployments@5.2.1
+      with:
+        switches: -avzr --delete
+        path: ./
+        remote_path: /home/www/my_project/
+        remote_host: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
+        remote_user: "ubuntu"
+        remote_key: ${{ secrets.PILOT_EC2_KEY }}
