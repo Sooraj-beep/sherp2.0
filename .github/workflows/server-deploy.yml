@@ -17,6 +17,7 @@ jobs:
          sudo -i
          cd ..
          ls
+         mkdir /home/sooraj/sherp2
          chmod +x /home/sooraj/sherp2
       - uses: actions/checkout@v3
       - name: Deploy to EC2
