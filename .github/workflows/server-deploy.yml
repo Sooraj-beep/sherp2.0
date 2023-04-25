@@ -9,14 +9,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Push to EC2 Instance
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-      - uses: actions/checkout@v1
-      
+      - uses: actions/checkout@v3
       - name: Deploy to EC2
         uses: easingthemes/ssh-deploy@v2.1.5
         env:
