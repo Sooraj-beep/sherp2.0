@@ -16,6 +16,7 @@ jobs:
       - run: | 
          sudo -i
          cd ..
+         chmod +x /home/sooraj/sherp2
       - uses: actions/checkout@v3
       - name: Deploy to EC2
         uses: easingthemes/ssh-deploy@v2.1.5
