@@ -1,4 +1,5 @@
 {
     "?hello": "Hello world! My name is Sherp. I am a bot.",
-    "?help": "you can use ?<text> to interact with me."
+    "?help": "you can use ?<text> to interact with me.",
+    "?ping": "pong!"
 }
