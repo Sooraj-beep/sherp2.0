@@ -1,4 +1,4 @@
-name: CI
+name: Deploy code to EC2 instance
 
 on:
   push:
@@ -6,19 +6,24 @@ on:
   pull_request:
     branches: [ master ]
 
-  workflow_dispatch:
-  
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: rsync deployments
-      uses: burnett01/rsync-deployments@5.2.1
-      with:
-        switches: -avzr --delete
-        path: ./
-        remote_path: /home/www/my_project/
-        remote_host: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
-        remote_user: "ubuntu"
-        remote_key: ${{ secrets.PILOT_EC2_KEY }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SSH
+        run: sudo apt-get install -y ssh
+
+      - name: Copy code to EC2 instance
+        uses: appleboy/scp-action@master
+        with:
+          host: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
+          username: 'ubuntu'
+          key: ${{ secrets.PILOT_EC2_KEY }}
+          source: '.'
+          target: '/home/ubuntu/my-app'
+
+
+
