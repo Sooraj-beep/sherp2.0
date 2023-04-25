@@ -23,7 +23,7 @@ jobs:
           username: 'ubuntu'
           key: ${{ secrets.PILOT_EC2_KEY }}
           source: '.'
-          target: '/home/ubuntu/my-app'
+          target: '/home/ubuntu/sherp2'
 
 
 
