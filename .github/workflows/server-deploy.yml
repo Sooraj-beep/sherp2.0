@@ -28,7 +28,6 @@ jobs:
           pm2 stop sherp2
           pip install -r requirements.txt
           pm2 start sherp2
-        working-directory: ./sherp2
         
 
 
