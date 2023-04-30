@@ -20,9 +20,9 @@ async def on_message(message):
     # stops the bot from responding to itself
     if message.author.bot: return
     
-    if message.content in commands:
+    if message.content in commands and message.content != "//":
         response = commands[message.content]
-        await message.channel.send(SHERP_URL + response if message.auther.id == SHERP_ID else response)
+        await message.channel.send(SHERP_URL + response if message.author.id == SHERP_ID else response)
 
 # run the bot using the token in the .env file
 client.run(os.getenv("BOT_TOKEN"))
