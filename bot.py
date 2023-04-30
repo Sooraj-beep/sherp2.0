@@ -6,7 +6,7 @@ import requests
 from draw_sched import draw_schedule
 from io import BytesIO
 
-SHERP_ID = "212613981465083906"
+SHERP_ID = 212613981465083906
 
 # load the .env file
 load_dotenv()
