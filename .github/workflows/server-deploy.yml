@@ -33,6 +33,8 @@ jobs:
           key: ${{ secrets.PILOT_EC2_KEY }}
           script: |
             cd /home/ubuntu/sherp2
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             npm install pm2
             pm2 stop sherp2
             pip install -r requirements.txt
