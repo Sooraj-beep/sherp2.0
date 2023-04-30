@@ -3,7 +3,7 @@ import json
 from dotenv import load_dotenv
 import os
 
-SHERP_ID = "212613981465083906"
+SHERP_ID = 212613981465083906
 
 # load the .env file
 load_dotenv()
