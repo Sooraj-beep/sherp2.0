@@ -5,6 +5,7 @@ import os
 import requests
 from draw_sched import draw_schedule
 from io import BytesIO
+import random
 
 SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
@@ -24,7 +25,7 @@ async def on_message(message):
     if message.author.bot: return
     
     if message.content in commands and message.content != "//":
-        response = commands[message.content]
+        response = random.choice(commands[message.content]) # if string return string, if list return random element
         await message.channel.send(SHERP_URL + response if message.author.id == SHERP_ID else response)
     # find message.content in commands.json and append msg with the value
 

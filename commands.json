@@ -2,7 +2,6 @@
     "?help": "you can use ?<text> to interact with me.",
     "?hello": "Hello world! My name is Sherp. I am ~~a bot~~ inside your walls.",
     "?sharon": "Email csugrad@ualberta.ca.",
-    "//": "I don't know why we needed pong",
     "?health": "Yes, CD does work. Thanks for asking.",
     "?contribute": "https://github.com/Sooraj-beep/sherp2.0",
 
@@ -21,13 +20,34 @@
 
     "?photo": "https://cdn.discordapp.com/avatars/1099814447767371847/d571547d818e87fff5f1d4b651c1fe34.png?size=4096",
     "?beach": "https://images-ext-2.discordapp.net/external/cZLn5SlZBKlFg0XB9XGjo3skYghmOo1HF18rQaV5Kdk/%3Fsize%3D600/https/cdn.discordapp.com/banners/402891511991369740/f685e66edfa9f8477f2d65d6c53dd884.webp?width=1200&height=674",
-    "?gourmet": "https://cdn.discordapp.com/attachments/959878330847481878/966774134086434936/20220421_125509.jpg"
+    "?gourmet": "https://cdn.discordapp.com/attachments/959878330847481878/966774134086434936/20220421_125509.jpg",
     
     "//": "one word quips",
     "?nito": "bloat++",
     "?java": "Have you tried kotlin? https://cdn.discordapp.com/attachments/968245983697842196/1101253691392143410/41BDFE8C-2BC0-4E2B-A3C9-539962B71707.jpg",
     "?league": ":ban:",
     "?vim": "vim is only used to clean toilets",
+
+    "//": "magic 8 ball",
+    "?8ball": [
+        "It is certain.",
+        "It is decidedly so.",
+        "Without a doubt.",
+        "Yes - definitely.",
+        "You may rely on it.",
+        "As I see it, yes.",
+        "Most likely.",
+        "Outlook good.",
+        "Yes.",
+        "Signs point to yes.",
+        "Thats a question for Sherp1.0",
+        "Shut up, nerd.",
+        "Ask again later.",
+        "Bro I'm busy rn.",
+        "ffs, not this again.",
+        "Only the mods of the server know that one.",
+        "Ask me once you get into faang."
+    ],
 
     "//": "end of document"
 }
