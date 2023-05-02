@@ -6,7 +6,8 @@ import requests
 from draw_sched import draw_schedule
 from io import BytesIO
 
-SHERP_ID = 212613981465083906
+SHERP_ID = "212613981465083906"
+SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
 
 # load the .env file
 load_dotenv()
@@ -19,16 +20,13 @@ with open("commands.json", "r", encoding='utf-8') as f:
 
 @client.event
 async def on_message(message):
+    # stops the bot from responding to itself
+    if message.author.bot: return
+    
+    if message.content in commands and message.content != "//":
+        response = commands[message.content]
+        await message.channel.send(SHERP_URL + response if message.author.id == SHERP_ID else response)
     # find message.content in commands.json and append msg with the value
-    for command in commands:
-        if message.content == command:
-            msg = commands[command]
-
-            # if the message is from sherps, add a celebratory gif
-            if message.author.id == SHERP_ID:
-                msg = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif " + msg
-
-            await message.channel.send(msg)
 
     if "?view" in message.content:
         errmsg = ''
