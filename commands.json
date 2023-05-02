@@ -3,7 +3,7 @@
     "?hello": "Hello world! My name is Sherp. I am ~~a bot~~ inside your walls.",
     "?sharon": "Email csugrad@ualberta.ca.",
     "?health": "Yes, CD does work. Thanks for asking.",
-    "?contribute": "https://github.com/Sooraj-beep/sherp2.0",
+    "?contribute": "My repo is here: <https://github.com/Sooraj-beep/sherp2.0>",
 
     "//": "copypasta shortcuts",
     "?ty": "I feel so passionate about how many ingenious minds exist on this server where we can share knowledge and experiences. There are not many places on the internet where you can expose your true self and be heard. Thank you all for existing 🥰",
