@@ -25,7 +25,11 @@ async def on_message(message):
     if message.author.bot: return
     
     if message.content in commands and message.content != "//":
-        response = random.choice(commands[message.content]) # if string return string, if list return random element
+        # if string return string, if list return random element
+        if type(commands[message.content]) == list:
+            response = random.choice(commands[message.content])
+        else:
+            response = commands[message.content]
         await message.channel.send(SHERP_URL + response if message.author.id == SHERP_ID else response)
     # find message.content in commands.json and append msg with the value
 
