@@ -25,5 +25,22 @@ jobs:
           source: '.'
           target: '/home/ubuntu/sherp2'
 
+      - name: Rebuild bot on EC2 instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
+          username: 'ubuntu'
+          key: ${{ secrets.PILOT_EC2_KEY }}
+          script: |
+            cd /home/ubuntu/sherp2
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            npm install pm2
+            pm2 stop sherp2
+            pip install -r requirements.txt
+            pm2 start sherp2
+
+        
+
 
 
