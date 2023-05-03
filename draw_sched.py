@@ -68,11 +68,11 @@ def draw_schedule(sched):
     class_on_weekend = False
     course_itr = 0
     curr_course = None
-    classes = sched['objects']['schedules'][0]
+    classes = sched
     for course_class in classes:
         course_class = course_class['objects']
 
-        course_id = course_class['class']
+        course_id = course_class['course']
         if course_id != curr_course:
             color = color_scheme[course_itr%len(color_scheme)]
             curr_course = course_id
