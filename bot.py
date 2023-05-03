@@ -26,7 +26,7 @@ schedule_session.setup(client)
 with open("commands.json", "r", encoding='utf-8') as f:
     cmds = json.load(f)
 with open("copypasta.json", "r", encoding='utf-8') as f:
-    cmds = json.load(f)
+    pastas = json.load(f)
 
 @client.event
 async def on_message(message):
