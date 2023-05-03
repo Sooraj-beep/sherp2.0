@@ -63,7 +63,7 @@ def get_draw_text(course_class, location=''):
 def draw_schedule(sched):
     print(sched)
     sched = sorted(sched, key=lambda x: x['objects']['course'])
-    image = Image.open("boilerplate_full.png")
+    image = Image.open("schedubuddy/boilerplate_full.png")
     draw = ImageDraw.Draw(image)
     min_y = 2147483647
     max_y = -2147483648

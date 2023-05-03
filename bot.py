@@ -7,8 +7,8 @@ import requests
 from io import BytesIO
 import random
 
-import schedule_session
-from draw_sched import draw_schedule
+import schedubuddy.schedule_session as schedule_session
+from schedubuddy.draw_sched import draw_schedule
 
 SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
@@ -23,9 +23,9 @@ client = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 schedule_session.setup(client)
 
 # load commands.json
-with open("commands.json", "r", encoding='utf-8') as f:
+with open("knowledge/commands.json", "r", encoding='utf-8') as f:
     cmds = json.load(f)
-with open("copypasta.json", "r", encoding='utf-8') as f:
+with open("knowledge/copypasta.json", "r", encoding='utf-8') as f:
     pastas = json.load(f)
 
 @client.event
