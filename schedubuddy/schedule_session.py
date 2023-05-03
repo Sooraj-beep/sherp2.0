@@ -1,4 +1,4 @@
-from draw_sched import draw_schedule
+from schedubuddy.draw_sched import draw_schedule
 
 import json, requests
 from io import BytesIO
