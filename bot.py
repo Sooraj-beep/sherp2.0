@@ -25,12 +25,13 @@ schedule_session.setup(client)
 # load commands.json
 with open("commands.json", "r", encoding='utf-8') as f:
     cmds = json.load(f)
+with open("copypasta.json", "r", encoding='utf-8') as f:
+    pastas = json.load(f)
 
 @client.event
 async def on_message(message):
     # stops the bot from responding to itself
     if message.author.bot: return
-
     if message.content in cmds and message.content != "//":
         # if string return string, if list return random element
         if type(cmds[message.content]) == list:
@@ -40,8 +41,10 @@ async def on_message(message):
         await message.channel.send(SHERP_URL + response if message.author.id == SHERP_ID else response)
         return
     # find message.content in commands.json and append msg with the value
-
-    if "?view" in message.content:
+    elif "?pasta" in message.content:
+        # pick a random copypasta from copypasta.json
+        await message.channel.send(random.choice(pastas))
+    elif "?view" in message.content:
         errmsg = ''
         try:
             args = message.content.split(' ')
