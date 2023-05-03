@@ -17,6 +17,8 @@ client = discord.Client(intents=discord.Intents.all())
 # load commands.json
 with open("commands.json", "r", encoding='utf-8') as f:
     commands = json.load(f)
+with open("copypasta.json", "r", encoding='utf-8') as f:
+    pastas = json.load(f)
 
 
 @client.event
@@ -24,7 +26,7 @@ async def on_message(message):
     # stops the bot from responding to itself
     if message.author.bot: return
     
-    if message.content in commands and message.content != "//":
+    elif message.content in commands and message.content != "//":
         # if string return string, if list return random element
         if type(commands[message.content]) == list:
             response = random.choice(commands[message.content])
@@ -32,8 +34,10 @@ async def on_message(message):
             response = commands[message.content]
         await message.channel.send(SHERP_URL + response if message.author.id == SHERP_ID else response)
     # find message.content in commands.json and append msg with the value
-
-    if "?view" in message.content:
+    elif "?pasta" in message.content:
+        # pick a random copypasta from copypasta.json
+        await message.channel.send(random.choice(pastas))
+    elif "?view" in message.content:
         errmsg = ''
         try:
             args = message.content.split(' ')
