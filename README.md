@@ -3,9 +3,10 @@
 sherp2.0 is a discord bot that answers frequently asked questions for students at the University of Alberta. It is currently operable on the unofficial University of Alberta CS discord. Students contribute to the bots knowledge database by contributing to `commands.json`
 
 ## Features
-- schedubuddy integration (credit: @aarctan):
+- [schedubuddy](https://schedubuddy.com/) integration (credit: @aarctan):
    - Create combinations of schedules based on user's choice of courses
    - View all classes you can enroll in at the same time given a classroom location
+- Check course prerequisites (credit: @aarctan and @steventango) [Course Data] (https://github.com/steventango/synapse/blob/master/data/ualberta.ca.json)
 - Magic 8-ball
 - Shortcuts to many well known facts
 - Shortcuts to copypastas popular on the CS dicord server
