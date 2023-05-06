@@ -27,6 +27,8 @@ with open("knowledge/commands.json", "r", encoding='utf-8') as f:
     cmds = json.load(f)
 with open("knowledge/copypasta.json", "r", encoding='utf-8') as f:
     pastas = json.load(f)
+with open("knowledge/ualberta.ca.json", "r", encoding='utf-8') as f:
+    catalog = json.load(f)
 
 @client.event
 async def on_message(message):
@@ -44,6 +46,40 @@ async def on_message(message):
     elif "?pasta" in message.content:
         # pick a random copypasta from copypasta.json
         await message.channel.send(random.choice(pastas))
+    elif "?prereq" in message.content:
+        args = message.content.split(' ')
+        if not 3 <= len(args) <= 4:
+            await message.channel.send(f'Usage: `?prereq [department] [course]`, e.g. `?prereq cmput 229`')
+            return
+        dept = args[1] if len(args) == 3 else args[1] + ' ' + args[2]
+        course = args[2] if len(args) == 3 else args[3]
+        dept, course = dept.upper(), course.upper()
+        if not dept in catalog['courses']:
+            await message.channel.send(f'Could not find **{dept}**')
+            return
+        if not course in catalog['courses'][dept]:
+            await message.channel.send(f'Could not find **{course}** in the {dept} department')
+            return
+        catalog_obj = catalog['courses'][dept][course]
+        course_name = catalog_obj['name']
+        prereq_strs = []
+        coreq_strs = []
+        if 'prereqs' in catalog_obj:
+            for group in catalog_obj['prereqs']:
+                prereq_strs.append('Prerequisite: ' + ', or '.join(group))
+        if 'coreqs' in catalog_obj:
+            for group in catalog_obj['coreqs']:
+                coreq_strs.append('Corequisite: ' + ', or '.join(group))
+        prereq_strs = '\n'.join(prereq_strs)
+        prereqs = ''
+        coreqs = ''
+        if len(prereq_strs) > 0:
+            prereqs = prereq_strs
+        else:
+            prereqs = 'No prerequisites'
+        if len(coreq_strs) > 0:
+            coreqs = '\n' + '\n'.join(coreq_strs)
+        await message.channel.send(f'**{dept} {course} - {course_name}**\n{prereqs}{coreqs}')
     elif "?view" in message.content:
         errmsg = ''
         try:
