@@ -1,36 +1,3 @@
 {
-    "easy" : [
-        "hissingmicrophone",
-        "batterup",
-        "hangingout",
-        "pokerhand",
-        "armystrengtheasy",
-        "armystrengthhard",
-        "brokenswords",
-        "drinkingsong",
-        "mosquito",
-        "ptice",
-        "sevenwonders",
-        "volim",
-        "yinyangstones"
-    ],
-
-    "medium" : [
-        "basicprogramming",
-        "battlesimulation",
-        "bitsequalizer",
-        "fastfood",
-        "anotherbrick",
-        "beekeeper",
-        "bottledup",
-        "carousel",
-        "climbingworm",
-        "codecleanups",
-        "cowcrane",
-        "howl",
-        "shatteredcake"
-    ],
-
-    "rmrc2021": "https://open.kattis.com/problem-sources/Rocky%20Mountain%20Regional%20Programming%20Contest%202021",
     "book": "https://docs.google.com/spreadsheets/d/1Jo3ZUbHP0M-TB_5bfkyiCzTzCWn5o3u0IDr7uakN2VE/edit#gid=0"
 }
