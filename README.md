@@ -7,6 +7,7 @@ sherp2.0 is a discord bot that answers frequently asked questions for students a
    - Create combinations of schedules based on user's choice of courses
    - View all classes you can enroll in at the same time given a classroom location
 - Check course prerequisites (credit: @aarctan and @steventango) [Course Data](https://github.com/steventango/synapse/blob/master/data/ualberta.ca.json)
+- Request Kattis problems based on difficulty and other parameters (credit: @GurveerSohal)
 - Magic 8-ball
 - Shortcuts to many well known facts
 - Shortcuts to copypastas popular on the CS dicord server
