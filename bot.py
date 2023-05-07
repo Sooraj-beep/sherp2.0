@@ -14,6 +14,7 @@ SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
 SCHEDUBUDDY_ROOT = 'https://schedubuddy1.herokuapp.com//api/v1/'
 KATTIS_PROBLEM_URL = "https://open.kattis.com/problems/"
+KATTIS_CONTEST_URL = "https://open.kattis.com/problem-sources/"
 
 # load the .env file
 load_dotenv()
@@ -31,7 +32,11 @@ with open("knowledge/copypasta.json", "r", encoding='utf-8') as f:
 with open("knowledge/ualberta.ca.json", "r", encoding='utf-8') as f:
     catalog = json.load(f)
 with open("knowledge/kattis.json", "r", encoding='utf-8') as f:
-    kattis_info = json.load(f)
+    kattis_links = json.load(f)
+with open("knowledge/problems.json", "r", encoding='utf-8') as f:
+    kattis_problems = json.load(f)
+with open("knowledge/contests.json", "r", encoding='utf-8') as f:
+    kattis_contests = json.load(f)
 
 @client.event
 async def on_message(message):
@@ -125,6 +130,12 @@ async def on_message(message):
             file = discord.File(bufferedio, filename="image.png")
             await message.channel.send(file=file)
     elif "?kattis" in message.content:
+        commands = []
+        commands.extend(list(kattis_links.keys()))
+        commands.extend(list(kattis_problems.keys()))
+        more = ["problem", "contest", "contests", "rank"]
+        commands.extend(more)
+
         args = message.content.split(' ')
         if len(args) != 2:
             await message.channel.send("Usage ?kattis <cmd>. For a list of commands use\n\t?kattis help")
@@ -134,32 +145,42 @@ async def on_message(message):
         if cmd == "help": 
             out = ""
             out += "Commands:\n"
-            out += "\thelp\n"
-            out += "\tproblem\n"
-            for k in kattis_info:
-                out += '\t' + k + '\n'
+            for cmd in commands:
+                out += '\t' + cmd + '\n'
             await message.channel.send(out)
             return
         elif cmd == "problem":
             problems = []
-            for k in kattis_info:
-                info = kattis_info[k]
-                if type(info) == list:
-                    problems.extend(info)
+            for k in kattis_problems:
+                problems.extend(kattis_problems[k])
             problem = random.choices(problems)[0]
             link = KATTIS_PROBLEM_URL + problem
             await message.channel.send(link)
             return
         else:
-            if cmd not in kattis_info:
+            if cmd not in commands:
                 await message.channel.send("Usage ?kattis <cmd>. For a list of commands use\n\t?kattis help")
                 return
-            info = kattis_info[cmd]
-            if type(info) == str:
-                await message.channel.send(info)
+
+            if cmd in kattis_links:
+                await message.channel.send(kattis_links[cmd])
                 return
+            elif cmd == "contest":
+                contest = random.choices(kattis_contests["contests"])[0]
+                link = KATTIS_CONTEST_URL + contest
+                await message.channel.send(link)
+                return
+            elif cmd == "contests":
+                contest = random.choices(kattis_contests["contests"])
+                link = KATTIS_CONTEST_URL
+                await message.channel.send(link)
+                return    
+            elif cmd == "rank":
+                link = 'https://open.kattis.com/ranklist'
+                await message.channel.send(link)
+                return    
             else:
-                problem = random.choices(info)[0]
+                problem = random.choices(kattis_problems[cmd])[0]
                 link = KATTIS_PROBLEM_URL + problem
                 await message.channel.send(link)
                 return
