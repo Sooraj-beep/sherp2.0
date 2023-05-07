@@ -7,12 +7,13 @@ import requests
 from io import BytesIO
 import random
 
-import schedubuddy.schedule_session as schedule_session
-from schedubuddy.draw_sched import draw_schedule
+# import schedubuddy.schedule_session as schedule_session
+# from schedubuddy.draw_sched import draw_schedule
 
 SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
 SCHEDUBUDDY_ROOT = 'https://schedubuddy1.herokuapp.com//api/v1/'
+KATTIS_PROBLEM_URL = "https://open.kattis.com/problems/"
 
 # load the .env file
 load_dotenv()
@@ -20,7 +21,7 @@ load_dotenv()
 client = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 
 # ?sched plugin
-schedule_session.setup(client)
+# schedule_session.setup(client)
 
 # load commands.json
 with open("knowledge/commands.json", "r", encoding='utf-8') as f:
@@ -29,6 +30,8 @@ with open("knowledge/copypasta.json", "r", encoding='utf-8') as f:
     pastas = json.load(f)
 with open("knowledge/ualberta.ca.json", "r", encoding='utf-8') as f:
     catalog = json.load(f)
+with open("knowledge/kattis.json", "r", encoding='utf-8') as f:
+    kattis_info = json.load(f)
 
 @client.event
 async def on_message(message):
@@ -121,6 +124,45 @@ async def on_message(message):
             bufferedio.seek(0)
             file = discord.File(bufferedio, filename="image.png")
             await message.channel.send(file=file)
+    elif "?kattis" in message.content:
+        args = message.content.split(' ')
+        if len(args) != 2:
+            await message.channel.send("Usage ?kattis <cmd>. For a list of commands use\n\t?kattis help")
+            return
+        cmd = args[1]
+
+        if cmd == "help": 
+            out = ""
+            out += "Commands:\n"
+            out += "\thelp\n"
+            out += "\tproblem\n"
+            for k in kattis_info:
+                out += '\t' + k + '\n'
+            await message.channel.send(out)
+            return
+        elif cmd == "problem":
+            problems = []
+            for k in kattis_info:
+                info = kattis_info[k]
+                if type(info) == list:
+                    problems.extend(info)
+            problem = random.choices(problems)[0]
+            link = KATTIS_PROBLEM_URL + problem
+            await message.channel.send(link)
+            return
+        else:
+            if cmd not in kattis_info:
+                await message.channel.send("Usage ?kattis <cmd>. For a list of commands use\n\t?kattis help")
+                return
+            info = kattis_info[cmd]
+            if type(info) == str:
+                await message.channel.send(info)
+                return
+            else:
+                problem = random.choices(info)[0]
+                link = KATTIS_PROBLEM_URL + problem
+                await message.channel.send(link)
+                return
     
     await client.process_commands(message)
 
