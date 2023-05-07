@@ -7,8 +7,8 @@ import requests
 from io import BytesIO
 import random
 
-# import schedubuddy.schedule_session as schedule_session
-# from schedubuddy.draw_sched import draw_schedule
+import schedubuddy.schedule_session as schedule_session
+from schedubuddy.draw_sched import draw_schedule
 
 SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
@@ -21,7 +21,7 @@ load_dotenv()
 client = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 
 # ?sched plugin
-# schedule_session.setup(client)
+schedule_session.setup(client)
 
 # load commands.json
 with open("knowledge/commands.json", "r", encoding='utf-8') as f:
