@@ -37,6 +37,8 @@ with open("knowledge/problems.json", "r", encoding='utf-8') as f:
     kattis_problems = json.load(f)
 with open("knowledge/contests.json", "r", encoding='utf-8') as f:
     kattis_contests = json.load(f)
+with open("knowledge/specific.json", "r", encoding='utf-8') as f:
+    kattis_specific = json.load(f)
 
 @client.event
 async def on_message(message):
@@ -133,7 +135,7 @@ async def on_message(message):
         commands = []
         commands.extend(list(kattis_links.keys()))
         commands.extend(list(kattis_problems.keys()))
-        more = ["problem", "contest", "contests", "rank"]
+        more = ["problem", "contest", "contests", "rank", "specific"]
         commands.extend(more)
 
         args = message.content.split(' ')
@@ -158,10 +160,6 @@ async def on_message(message):
             await message.channel.send(link)
             return
         else:
-            if cmd not in commands:
-                await message.channel.send("Usage ?kattis <cmd>. For a list of commands use\n\t?kattis help")
-                return
-
             if cmd in kattis_links:
                 await message.channel.send(kattis_links[cmd])
                 return
@@ -178,11 +176,28 @@ async def on_message(message):
             elif cmd == "rank":
                 link = 'https://open.kattis.com/ranklist'
                 await message.channel.send(link)
-                return    
-            else:
+                return
+            elif cmd == "specific":
+                out = "You can ask for a problem from one of the following topics:\n"
+                for k in kattis_specific:
+                    out += f'\t{k}\n'    
+                await message.channel.send(out)
+                return
+            elif cmd in kattis_problems:
                 problem = random.choices(kattis_problems[cmd])[0]
                 link = KATTIS_PROBLEM_URL + problem
                 await message.channel.send(link)
+                return
+            elif cmd in [k.split()[0] for k in kattis_specific]:
+                for k in kattis_specific:
+                    if cmd == k.split()[0]:
+                        cmd = k
+                problem = random.choices(kattis_specific[cmd])[0]
+                link = KATTIS_PROBLEM_URL + problem
+                await message.channel.send(link)
+                return
+            else:
+                await message.channel.send("Usage ?kattis <cmd>. For a list of commands use\n\t?kattis help")
                 return
     
     await client.process_commands(message)
