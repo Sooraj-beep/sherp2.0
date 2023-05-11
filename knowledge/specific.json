@@ -1,0 +1,116 @@
+{
+  "bruteforce (and greedy and bsta)": [
+    "4thought",
+    "classpicture",
+    "natjecanje",
+    "minibattleship",
+    "color",
+    "virus",
+    "arithmeticdecoding",
+    "solitaire",
+    "freeweights"
+  ],
+
+  "dp": [
+    "flowshop",
+    "narrowartgallery",
+    "walrusweights",
+    "maximizingyourpay",
+    "canonical",
+    "drivinglanes",
+    "orders",
+    "pokemongogo",
+    "bachetsgame"
+  ],
+
+  "graph": [
+    "builddeps",
+    "drivingrange",
+    "flowerytrails",
+    "moneymatters",
+    "getshorty",
+    "muddyhike",
+    "naturereserve",
+    "pickupsticks",
+    "grid",
+    "terraces",
+    "treehouses",
+    "conquest",
+    "equivalences"
+  ],
+  "geometry": [
+    "collidingtraffic",
+    "countingtriangles",
+    "sjecista",
+    "wrapping",
+    "biggesttriangle",
+    "junk",
+    "particlecollision",
+    "wrapping",
+    "colouringbook"
+  ],
+  "cnp": [
+    "dunglish",
+    "bobby",
+    "raffle",
+    "perica",
+    "tomjerry",
+    "election",
+    "odds",
+    "porpoises",
+    "genius",
+    "password",
+    "toys"
+  ],
+
+  "numbertheory": [
+    "candydistribution",
+    "factovisors",
+    "relatives",
+    "flowergarden",
+    "howmanydigits",
+    "candydistribution",
+    "farey"
+  ],
+
+  "string": [
+    "buzzwords",
+    "dvaput",
+    "stringmatching",
+    "bing",
+    "burrowswheeler",
+    "clockpictures",
+    "typo"
+  ],
+
+  "datastructures": [
+    "chopwood",
+    "tourists",
+    "turbo",
+    "virtualfriends",
+    "justforsidekicks",
+    "modulodatastructures",
+    "rootedsubtrees",
+    "supercomputer",
+    "bing",
+    "listentoyourboss",
+    "workstations",
+    "teque",
+    "sim",
+    "addingwords",
+    "guessthedatastructure"
+  ],
+
+  "flow (and matching)": [
+    "pianolessons",
+    "piano",
+    "eastereggs",
+    "openpitmining",
+    "copsandrobbers",
+    "eastereggs",
+    "unfairplay",
+    "bookcircle"
+  ],
+
+  "numerical": ["cheeseifyouplease", "kinversions", "molecules"]
+}
