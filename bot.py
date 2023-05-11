@@ -199,6 +199,10 @@ async def on_message(message):
             else:
                 await message.channel.send("Usage ?kattis <cmd>. For a list of commands use\n\t?kattis help")
                 return
+    elif "?bbq23" in message.content:
+        embed = discord.Embed(title="BBQ 23",color=3447003,description="Here's a bunch of gigachads together")
+        embed.set_image(url="https://cdn.discordapp.com/attachments/968245983697842196/1101298256459346000/IMG_2316.jpg")
+        await message.channel.send(embed=embed)
     
     await client.process_commands(message)
 
