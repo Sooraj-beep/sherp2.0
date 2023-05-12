@@ -72,24 +72,8 @@ async def on_message(message):
             return
         catalog_obj = catalog['courses'][dept][course]
         course_name = catalog_obj['name']
-        prereq_strs = []
-        coreq_strs = []
-        if 'prereqs' in catalog_obj:
-            for group in catalog_obj['prereqs']:
-                prereq_strs.append('Prerequisite: ' + ', or '.join(group))
-        if 'coreqs' in catalog_obj:
-            for group in catalog_obj['coreqs']:
-                coreq_strs.append('Corequisite: ' + ', or '.join(group))
-        prereq_strs = '\n'.join(prereq_strs)
-        prereqs = ''
-        coreqs = ''
-        if len(prereq_strs) > 0:
-            prereqs = prereq_strs
-        else:
-            prereqs = 'No prerequisites'
-        if len(coreq_strs) > 0:
-            coreqs = '\n' + '\n'.join(coreq_strs)
-        await message.channel.send(f'**{dept} {course} - {course_name}**\n{prereqs}{coreqs}')
+        prereqs = catalog_obj.get('raw', 'No prerequisites')
+        await message.channel.send(f'**{dept} {course} - {course_name}**\n{prereqs}')
     elif "?view" in message.content:
         errmsg = ''
         try:
@@ -144,7 +128,7 @@ async def on_message(message):
             return
         cmd = args[1]
 
-        if cmd == "help": 
+        if cmd == "help":
             out = ""
             out += "Commands:\n"
             for cmd in commands:
@@ -172,7 +156,7 @@ async def on_message(message):
                 contest = random.choices(kattis_contests["contests"])
                 link = KATTIS_CONTEST_URL
                 await message.channel.send(link)
-                return    
+                return
             elif cmd == "rank":
                 link = 'https://open.kattis.com/ranklist'
                 await message.channel.send(link)
