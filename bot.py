@@ -188,6 +188,12 @@ async def on_message(message):
         embed.set_image(url="https://cdn.discordapp.com/attachments/968245983697842196/1101298256459346000/IMG_2316.jpg")
         await message.channel.send(embed=embed)
     
+    elif "?java" in message.content:
+        embed = discord.Embed(title="Java",color = 3447003,description="Have you tried Kotlin?")
+        embed.set_image(url="https://cdn.discordapp.com/attachments/968245983697842196/1101253691392143410/41BDFE8C-2BC0-4E2B-A3C9-539962B71707.jpg")
+        await message.channel.send(embed=embed)
+
+
     await client.process_commands(message)
 
 
