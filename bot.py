@@ -40,6 +40,20 @@ with open("knowledge/contests.json", "r", encoding='utf-8') as f:
 with open("knowledge/specific.json", "r", encoding='utf-8') as f:
     kattis_specific = json.load(f)
 
+deleted_messages = {} # {channel_id : message}
+
+@client.event
+async def on_message_delete(message):
+    deleted_messages[message.channel.id] = message
+
+@client.command(name='snipe')
+async def snipe(ctx):
+    message = deleted_messages.pop(ctx.channel.id, None)
+    if not message:
+        await ctx.send(f"Nothing found")
+    else:
+        await ctx.send(f"**{message.author.name}** said: {message.content}")
+
 @client.event
 async def on_message(message):
     # stops the bot from responding to itself
