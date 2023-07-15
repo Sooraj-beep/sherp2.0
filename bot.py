@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from datetime import datetime, timedelta
 import json
 from dotenv import load_dotenv
 import os
@@ -40,19 +41,27 @@ with open("knowledge/contests.json", "r", encoding='utf-8') as f:
 with open("knowledge/specific.json", "r", encoding='utf-8') as f:
     kattis_specific = json.load(f)
 
-deleted_messages = {} # {channel_id : message}
+##### ?snipe
+class DeletedMsg:
+    def __init__(self, msg):
+        self.msg = msg
+        self.time = datetime.utcnow()
+
+deleted_messages = {} # {channel id : DeletedMsg}
 
 @client.event
 async def on_message_delete(message):
-    deleted_messages[message.channel.id] = message
+    deleted_messages[message.channel.id] = DeletedMsg(message)
 
 @client.command(name='snipe')
 async def snipe(ctx):
-    message = deleted_messages.pop(ctx.channel.id, None)
-    if not message:
+    snipeTime = datetime.utcnow()
+    deletedmsg = deleted_messages.pop(ctx.channel.id, None)
+    if not deletedmsg or snipeTime - deletedmsg.time > timedelta(seconds=5):
         await ctx.send(f"Nothing found")
     else:
-        await ctx.send(f"**{message.author.name}** said: {message.content}")
+        await ctx.send(f"**{deletedmsg.msg.author.name}** said: {deletedmsg.msg.content}")
+
 
 @client.event
 async def on_message(message):
