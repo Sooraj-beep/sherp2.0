@@ -9,6 +9,7 @@ from io import BytesIO
 import random
 
 import schedubuddy.schedule_session as schedule_session
+import util
 from schedubuddy.draw_sched import draw_schedule
 
 SHERP_ID = "212613981465083906"
@@ -16,6 +17,7 @@ SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
 SCHEDUBUDDY_ROOT = 'https://schedubuddy1.herokuapp.com//api/v1/'
 KATTIS_PROBLEM_URL = "https://open.kattis.com/problems/"
 KATTIS_CONTEST_URL = "https://open.kattis.com/problem-sources/"
+SNIPE_TIMER = 10 # seconds
 
 # load the .env file
 load_dotenv()
@@ -43,24 +45,34 @@ with open("knowledge/specific.json", "r", encoding='utf-8') as f:
 
 ##### ?snipe
 class DeletedMsg:
-    def __init__(self, msg):
+    def __init__(self, msg, attachment_path=None):
         self.msg = msg
+        self.attachment_path = attachment_path
         self.time = datetime.utcnow()
 
 deleted_messages = {} # {channel id : DeletedMsg}
 
 @client.event
 async def on_message_delete(message):
-    deleted_messages[message.channel.id] = DeletedMsg(message)
+    attachment_path = None
+    if message.attachments:
+        attachment_path = await util.save_attachment(message.attachments[0])
+    deleted_messages[message.channel.id] = DeletedMsg(message, attachment_path)
 
 @client.command(name='snipe')
 async def snipe(ctx):
     snipeTime = datetime.utcnow()
     deletedmsg = deleted_messages.pop(ctx.channel.id, None)
-    if not deletedmsg or snipeTime - deletedmsg.time > timedelta(seconds=5):
+    if not deletedmsg or snipeTime - deletedmsg.time > timedelta(seconds=SNIPE_TIMER):
         await ctx.send(f"Nothing found")
+        return
+    embed = discord.Embed(description=f"**{deletedmsg.msg.author.name}** said: {deletedmsg.msg.content}", color=0x00ff00)
+    if deletedmsg.attachment_path:
+        file = discord.File(deletedmsg.attachment_path, filename=deletedmsg.attachment_path.split("/")[-1])
+        embed.set_image(url=f"attachment://{file.filename}")
+        await ctx.send(embed=embed, file=file)
     else:
-        await ctx.send(f"**{deletedmsg.msg.author.name}** said: {deletedmsg.msg.content}")
+        await ctx.send(embed=embed)
 
 
 @client.event

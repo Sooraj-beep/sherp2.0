@@ -3,3 +3,4 @@ discord.py==1.7.1
 Pillow==9.5.0
 python-dotenv==1.0.0
 beautifulsoup4==4.12.2
+aiohttp==3.7.4
