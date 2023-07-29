@@ -27,6 +27,29 @@ client = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 # ?sched plugin
 schedule_session.setup(client)
 
+# starboard
+starboard_messages = {}
+@client.event
+async def on_reaction_add(reaction, user):
+    if reaction.emoji == "⭐":
+        message = reaction.message
+        if not message.author.bot:
+
+            min_stars_required = 2
+
+            starboard_channel_id = 1134978577729867958
+
+            if reaction.count >= min_stars_required and message.id not in starboard_messages:
+                starboard_channel = client.get_channel(starboard_channel_id)
+                starboard_content = f"{reaction.count} ⭐: {message.content}\n"
+                starboard_content += f"Author: {message.author.mention}\n"
+                starboard_content += f"Original Channel: {message.channel.mention}"
+
+                starboard_message = await starboard_channel.send(starboard_content)
+                starboard_messages[message.id] = starboard_message.id
+
+
+
 # load commands.json
 with open("knowledge/commands.json", "r", encoding='utf-8') as f:
     cmds = json.load(f)
@@ -73,7 +96,6 @@ async def snipe(ctx):
         await ctx.send(embed=embed, file=file)
     else:
         await ctx.send(embed=embed)
-
 
 @client.event
 async def on_message(message):
