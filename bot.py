@@ -12,6 +12,7 @@ import schedubuddy.schedule_session as schedule_session
 import util
 from schedubuddy.draw_sched import draw_schedule
 
+
 SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
 SCHEDUBUDDY_ROOT = 'https://schedubuddy1.herokuapp.com//api/v1/'
@@ -31,24 +32,42 @@ schedule_session.setup(client)
 starboard_messages = {}
 @client.event
 async def on_reaction_add(reaction, user):
-    if reaction.emoji == "⭐":
+    if str(reaction.emoji) == "<:OnPhone:1135056433793204354>":
         message = reaction.message
         if not message.author.bot:
 
-            min_stars_required = 2
+            min_stars_required = 1
 
+            #Remember to replace this with UAlberta CS channel id
             starboard_channel_id = 1134978577729867958
+            starboard_channel = client.get_channel(starboard_channel_id)
 
             if reaction.count >= min_stars_required and message.id not in starboard_messages:
-                starboard_channel = client.get_channel(starboard_channel_id)
-                starboard_content = f"{reaction.count} ⭐: {message.content}\n"
-                starboard_content += f"Author: {message.author.mention}\n"
-                starboard_content += f"Original Channel: {message.channel.mention}"
+                
+                title = f"<:OnPhone:{1135056433793204354}> x **{reaction.count}** |{message.channel.mention}"
 
-                starboard_message = await starboard_channel.send(starboard_content)
+                starboard_content = f"{message.content}\n\n"
+                starboard_content += f"[Jump to Message!]({message.jump_url})"
+
+                embed = discord.Embed(description=starboard_content, color=discord.Color.dark_green())
+                embed.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
+                embed.set_footer(text="Starred Message")
+
+                starboard_message = await starboard_channel.send(title, embed=embed)
+
                 starboard_messages[message.id] = starboard_message.id
+            elif reaction.count >= min_stars_required and message.id in starboard_messages:
+                starboard_message_id = starboard_messages.get(message.id)
+                if starboard_message_id:
 
+                    updated_title = f"<:OnPhone:{1135056433793204354}> x **{reaction.count}** |{message.channel.mention}"
+                    
+                    starboard_message = await starboard_channel.fetch_message(starboard_message_id)
 
+                    embed = starboard_message.embeds[0]
+
+                    await starboard_message.edit(content=updated_title, embed=embed)
+                
 
 # load commands.json
 with open("knowledge/commands.json", "r", encoding='utf-8') as f:
