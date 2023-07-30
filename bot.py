@@ -30,43 +30,58 @@ schedule_session.setup(client)
 
 # starboard
 starboard_messages = {}
+EMOJI_DISPLAY = "<:OnPhone:1062142401973588039>"
+MIN_STARS_REQUIRED = 3
+STARBOARD_CHANNEL_ID = 1133260871049691257
+STARBOARD_CHANNEL = None
+STARBOARD_MESSAGE_ID = None
+TITLE = None
+
+async def update_title(reaction_count, message):
+    global TITLE
+    TITLE = EMOJI_DISPLAY + f" x **{reaction_count}** |{message.channel.mention}"
+
 @client.event
 async def on_reaction_add(reaction, user):
-    if str(reaction.emoji) == "<:OnPhone:1062142401973588039>":
+    global STARBOARD_CHANNEL, STARBOARD_MESSAGE_ID
+    if str(reaction.emoji) == EMOJI_DISPLAY:
         message = reaction.message
+        STARBOARD_CHANNEL = client.get_channel(STARBOARD_CHANNEL_ID)
+        STARBOARD_MESSAGE_ID = starboard_messages.get(message.id)
         if not message.author.bot:
-            min_stars_required = 3
-            #Remember to replace this with UAlberta CS channel id
-            starboard_channel_id = 1133260871049691257
-            starboard_channel = client.get_channel(starboard_channel_id)
-            if reaction.count >= min_stars_required and message.id not in starboard_messages:
+            if reaction.count >= MIN_STARS_REQUIRED and message.id not in starboard_messages:
                 #creates the title, content and embed for the message
-                title = f"<:OnPhone:{1062142401973588039}> x **{reaction.count}** |{message.channel.mention}"
+                await update_title(reaction.count, message)
                 starboard_content = f"{message.content}\n\n"
                 starboard_content += f"[Jump to Message!]({message.jump_url})"
                 embed = discord.Embed(description=starboard_content, color=discord.Color.dark_green())
                 embed.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
                 if 0.0 == random.random(): embed.set_footer(text="<:peepSelfie:1066954556753330236>")
-                starboard_message = await starboard_channel.send(title, embed=embed)
+                #check for attachments
+                if message.attachments:
+                    for attachment in message.attachments:
+                        if attachment.url.lower().endswith(("png", "jpeg", "jpg", "gif", "webp")):
+                            embed.set_image(url=attachment.url)
+                starboard_message = await STARBOARD_CHANNEL.send(TITLE, embed=embed)
                 starboard_messages[message.id] = starboard_message.id
             #update the reaction count if more get added after posting
-            elif reaction.count >= min_stars_required and message.id in starboard_messages:
-                starboard_message_id = starboard_messages.get(message.id)
-                if starboard_message_id:
-                    updated_title = f"<:OnPhone:{1062142401973588039}> x **{reaction.count}** |{message.channel.mention}"
-                    starboard_message = await starboard_channel.fetch_message(starboard_message_id)
+            elif reaction.count >= MIN_STARS_REQUIRED and message.id in starboard_messages:
+                if STARBOARD_MESSAGE_ID:
+                    await update_title(reaction.count, message)
+                    starboard_message = await STARBOARD_CHANNEL.fetch_message(STARBOARD_MESSAGE_ID)
                     embed = starboard_message.embeds[0]
-                    await starboard_message.edit(content=updated_title, embed=embed)
+                    await starboard_message.edit(content=TITLE, embed=embed)
 @client.event
 async def on_reaction_remove(reaction, user):
-    #updates the reaction count if :OnPhone: gets removed
     message = reaction.message
-    starboard_message_id = starboard_messages.get(message.id)
-    if str(reaction.emoji) == "<:OnPhone:1135056433793204354>" and message.id in starboard_messages:
-        updated_title = f"<:OnPhone:{1062142401973588039}> x **{reaction.count}** |{message.channel.mention}"
-        starboard_message = await client.get_channel(1133260871049691257).fetch_message(starboard_message_id)
+    #update the reaction count if :OnPhone: gets removed
+    #needed to set this variable again otherwise there is an error when reaction.count == 0
+    STARBOARD_MESSAGE_ID = starboard_messages.get(message.id)
+    if str(reaction.emoji) == EMOJI_DISPLAY and message.id in starboard_messages:
+        await update_title(reaction.count, message)
+        starboard_message = await STARBOARD_CHANNEL.fetch_message(STARBOARD_MESSAGE_ID)
         embed = starboard_message.embeds[0]
-        await starboard_message.edit(content=updated_title, embed=embed)
+        await starboard_message.edit(content=TITLE, embed=embed)
         
 # load commands.json
 with open("knowledge/commands.json", "r", encoding='utf-8') as f:
@@ -101,7 +116,7 @@ async def on_message_delete(message):
     deleted_messages[message.channel.id] = DeletedMsg(message, attachment_path)
     if message.id in starboard_messages:
         #gets starboard channel and fetches the bots message that matches the deleted message's id
-        msg = await client.get_channel(1133260871049691257).fetch_message(starboard_messages[message.id])
+        msg = await STARBOARD_CHANNEL.fetch_message(starboard_messages[message.id])
         await msg.delete()
         del starboard_messages[message.id]
 
