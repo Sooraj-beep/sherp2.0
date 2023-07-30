@@ -28,19 +28,19 @@ client = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 schedule_session.setup(client)
 
 # load commands.json
-with open("knowledge/commands.json", "r", encoding='utf-8') as f:
+with open("data/commands.json", "r", encoding='utf-8') as f:
     cmds = json.load(f)
-with open("knowledge/copypasta.json", "r", encoding='utf-8') as f:
+with open("data/copypasta.json", "r", encoding='utf-8') as f:
     pastas = json.load(f)
-with open("knowledge/ualberta.ca.json", "r", encoding='utf-8') as f:
+with open("data/ualberta.ca.json", "r", encoding='utf-8') as f:
     catalog = json.load(f)
-with open("knowledge/kattis.json", "r", encoding='utf-8') as f:
+with open("data/kattis.json", "r", encoding='utf-8') as f:
     kattis_links = json.load(f)
-with open("knowledge/problems.json", "r", encoding='utf-8') as f:
+with open("data/problems.json", "r", encoding='utf-8') as f:
     kattis_problems = json.load(f)
-with open("knowledge/contests.json", "r", encoding='utf-8') as f:
+with open("data/contests.json", "r", encoding='utf-8') as f:
     kattis_contests = json.load(f)
-with open("knowledge/specific.json", "r", encoding='utf-8') as f:
+with open("data/specific.json", "r", encoding='utf-8') as f:
     kattis_specific = json.load(f)
 
 ##### ?snipe
