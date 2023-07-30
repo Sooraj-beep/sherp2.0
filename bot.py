@@ -35,7 +35,7 @@ async def on_reaction_add(reaction, user):
     if str(reaction.emoji) == "<:OnPhone:1062142401973588039>":
         message = reaction.message
         if not message.author.bot:
-            min_stars_required = 1
+            min_stars_required = 3
             #Remember to replace this with UAlberta CS channel id
             starboard_channel_id = 1133260871049691257
             starboard_channel = client.get_channel(starboard_channel_id)
