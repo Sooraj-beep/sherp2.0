@@ -32,46 +32,42 @@ schedule_session.setup(client)
 starboard_messages = {}
 @client.event
 async def on_reaction_add(reaction, user):
-    #if reaction.emoji == 
-
-
-    if str(reaction.emoji) == "<:OnPhone:1135056433793204354>":
+    if str(reaction.emoji) == "<:OnPhone:1062142401973588039>":
         message = reaction.message
         if not message.author.bot:
-
             min_stars_required = 1
-
             #Remember to replace this with UAlberta CS channel id
-            starboard_channel_id = 1134978577729867958
+            starboard_channel_id = 1133260871049691257
             starboard_channel = client.get_channel(starboard_channel_id)
-
             if reaction.count >= min_stars_required and message.id not in starboard_messages:
-                
-                title = f"<:OnPhone:{1135056433793204354}> x **{reaction.count}** |{message.channel.mention}"
-
+                #creates the title, content and embed for the message
+                title = f"<:OnPhone:{1062142401973588039}> x **{reaction.count}** |{message.channel.mention}"
                 starboard_content = f"{message.content}\n\n"
                 starboard_content += f"[Jump to Message!]({message.jump_url})"
-
                 embed = discord.Embed(description=starboard_content, color=discord.Color.dark_green())
                 embed.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
-                embed.set_footer(text="Starred Message")
-
+                if 0.0 == random.random(): embed.set_footer(text="<:peepSelfie:1066954556753330236>")
                 starboard_message = await starboard_channel.send(title, embed=embed)
-
                 starboard_messages[message.id] = starboard_message.id
+            #update the reaction count if more get added after posting
             elif reaction.count >= min_stars_required and message.id in starboard_messages:
                 starboard_message_id = starboard_messages.get(message.id)
                 if starboard_message_id:
-
-                    updated_title = f"<:OnPhone:{1135056433793204354}> x **{reaction.count}** |{message.channel.mention}"
-                    
+                    updated_title = f"<:OnPhone:{1062142401973588039}> x **{reaction.count}** |{message.channel.mention}"
                     starboard_message = await starboard_channel.fetch_message(starboard_message_id)
-
                     embed = starboard_message.embeds[0]
-
                     await starboard_message.edit(content=updated_title, embed=embed)
-                
-
+@client.event
+async def on_reaction_remove(reaction, user):
+    #updates the reaction count if :OnPhone: gets removed
+    message = reaction.message
+    starboard_message_id = starboard_messages.get(message.id)
+    if str(reaction.emoji) == "<:OnPhone:1135056433793204354>" and message.id in starboard_messages:
+        updated_title = f"<:OnPhone:{1062142401973588039}> x **{reaction.count}** |{message.channel.mention}"
+        starboard_message = await client.get_channel(1133260871049691257).fetch_message(starboard_message_id)
+        embed = starboard_message.embeds[0]
+        await starboard_message.edit(content=updated_title, embed=embed)
+        
 # load commands.json
 with open("knowledge/commands.json", "r", encoding='utf-8') as f:
     cmds = json.load(f)
@@ -103,11 +99,11 @@ async def on_message_delete(message):
     if message.attachments:
         attachment_path = await util.save_attachment(message.attachments[0])
     deleted_messages[message.channel.id] = DeletedMsg(message, attachment_path)
-
     if message.id in starboard_messages:
-        print("delete")
-        msg = await client.get_channel(1134978577729867958).fetch_message(starboard_messages[message.id])
+        #gets starboard channel and fetches the bots message that matches the deleted message's id
+        msg = await client.get_channel(1133260871049691257).fetch_message(starboard_messages[message.id])
         await msg.delete()
+        del starboard_messages[message.id]
 
 @client.command(name='snipe')
 async def snipe(ctx):
