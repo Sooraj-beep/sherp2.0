@@ -32,6 +32,9 @@ schedule_session.setup(client)
 starboard_messages = {}
 @client.event
 async def on_reaction_add(reaction, user):
+    #if reaction.emoji == 
+
+
     if str(reaction.emoji) == "<:OnPhone:1135056433793204354>":
         message = reaction.message
         if not message.author.bot:
@@ -100,6 +103,11 @@ async def on_message_delete(message):
     if message.attachments:
         attachment_path = await util.save_attachment(message.attachments[0])
     deleted_messages[message.channel.id] = DeletedMsg(message, attachment_path)
+
+    if message.id in starboard_messages:
+        print("delete")
+        msg = await client.get_channel(1134978577729867958).fetch_message(starboard_messages[message.id])
+        await msg.delete()
 
 @client.command(name='snipe')
 async def snipe(ctx):
