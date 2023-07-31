@@ -28,7 +28,7 @@ data = {
     "contests": contests
 }
 
-with open("knowledge/contests.json", "w") as f:
+with open("../data/contests.json", "w") as f:
     json.dump(data, f)
 
-print("Done!")
+print("Done importing contests! 🥳")

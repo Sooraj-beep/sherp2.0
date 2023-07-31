@@ -49,6 +49,6 @@ data = {
     "hard": hard
 }
 
-with open("knowledge/problems.json", "w") as f:
+with open("../data/problems.json", "w") as f:
     json.dump(data, f)
-print("Done!")
+print("Done getting problems! 🥳")
