@@ -53,7 +53,7 @@ async def on_reaction_add(reaction, user):
             if reaction.count >= MIN_STARS_REQUIRED and message.id not in starboard_messages:
                 #creates the title, content and embed for the message
                 await update_title(reaction.count, message)
-                starboard_content =  f"{message.content}\n\n" if is_not_system_message else f"{message.system_content}\n\n"
+                starboard_content =  f"{message.content if is_not_system_message else message.system_content}\n\n"
                 starboard_content += f"[Jump to Message!]({message.jump_url})"
                 embed = discord.Embed(description=starboard_content, color=discord.Color.dark_green())
                 embed.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
