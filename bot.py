@@ -7,6 +7,7 @@ import os
 import requests
 from io import BytesIO
 import random
+from bs4 import BeautifulSoup
 
 import schedubuddy.schedule_session as schedule_session
 import util
@@ -170,6 +171,27 @@ async def on_message(message):
         course_name = catalog_obj['name']
         prereqs = catalog_obj.get('raw', 'No prerequisites')
         await message.channel.send(f'**{dept} {course} - {course_name}**\n{prereqs}')
+    elif "?desc" in message.content:
+        args = message.content.split(' ')
+        if not 3 <= len(args) <= 4:
+            await message.channel.send(f'Usage: `?desc [department] [course]`, e.g. `?desc cmput 229`')
+            return
+        dept = args[1] if len(args) == 3 else args[1] + '_' + args[2]
+        dept_text = args[1] if len(args) == 3 else args[1] + ' ' + args[2]
+        course = args[2] if len(args) == 3 else args[3]
+        dept, dept_text, course = dept.upper(), dept_text.upper(), course.upper()
+        catalogue_url = f'https://apps.ualberta.ca/catalogue/course/{dept}/{course}'
+        response = requests.get(catalogue_url)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            course_title = soup.find('h1').text.strip()
+            p_elements = soup.find_all('p')
+            faculty = p_elements[0].text.strip()
+            description = p_elements[1].text.strip()
+            await message.channel.send(f'**{course_title}**\n{faculty}\n{description}')
+        else:
+            await message.channel.send(f'Could not find **{dept_text} {course}**')
+            return
     elif "?view" in message.content:
         errmsg = ''
         try:
