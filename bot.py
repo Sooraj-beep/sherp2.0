@@ -7,7 +7,6 @@ import os
 import requests
 from io import BytesIO
 import random
-from bs4 import BeautifulSoup
 
 import schedubuddy.schedule_session as schedule_session
 import util
