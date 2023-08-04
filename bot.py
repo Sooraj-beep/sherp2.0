@@ -31,7 +31,7 @@ schedule_session.setup(client)
 # starboard
 starboard_messages = {}
 EMOJI_DISPLAY = "<:OnPhone:1062142401973588039>"
-MIN_STARS_REQUIRED = 3
+MIN_STARS_REQUIRED = 5
 STARBOARD_CHANNEL_ID = 1133260871049691257
 STARBOARD_CHANNEL = None
 STARBOARD_MESSAGE_ID = None
@@ -56,22 +56,25 @@ async def on_reaction_add(reaction, user):
                 starboard_content =  f"{message.content if is_not_system_message else message.system_content}\n\n"
                 starboard_content += f"[Jump to Message!]({message.jump_url})"
                 embed = discord.Embed(description=starboard_content, color=discord.Color.dark_green())
-                embed.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
+                embed.set_author(name=message.author.display_name, icon_url=message.author.display_avatar.url)
                 if 0.0 == random.random(): embed.set_footer(text="<:peepSelfie:1066954556753330236>")
                 #check for attachments
+                embeds = [embed]
                 if message.attachments:
                     for attachment in message.attachments:
                         if attachment.url.lower().endswith(("png", "jpeg", "jpg", "gif", "webp")):
-                            embed.set_image(url=attachment.url)
-                starboard_message = await STARBOARD_CHANNEL.send(TITLE, embed=embed)
+                            image_embed = discord.Embed(url = "https://discord.com/")
+                            image_embed.set_image(url=attachment.url)
+                            embeds.append(image_embed)
+                starboard_message = await STARBOARD_CHANNEL.send(TITLE, embeds=embeds)
                 starboard_messages[message.id] = starboard_message.id
             #update the reaction count if more get added after posting
             elif reaction.count >= MIN_STARS_REQUIRED and message.id in starboard_messages:
                 if STARBOARD_MESSAGE_ID:
                     await update_title(reaction.count, message)
                     starboard_message = await STARBOARD_CHANNEL.fetch_message(STARBOARD_MESSAGE_ID)
-                    embed = starboard_message.embeds[0]
-                    await starboard_message.edit(content=TITLE, embed=embed)
+                    embed = starboard_message.embeds
+                    await starboard_message.edit(content=TITLE, embeds=embed)
 @client.event
 async def on_reaction_remove(reaction, user):
     message = reaction.message
@@ -81,8 +84,8 @@ async def on_reaction_remove(reaction, user):
     if str(reaction.emoji) == EMOJI_DISPLAY and message.id in starboard_messages:
         await update_title(reaction.count, message)
         starboard_message = await STARBOARD_CHANNEL.fetch_message(STARBOARD_MESSAGE_ID)
-        embed = starboard_message.embeds[0]
-        await starboard_message.edit(content=TITLE, embed=embed)
+        embed = starboard_message.embeds
+        await starboard_message.edit(content=TITLE, embeds=embed)
         
 # load commands.json
 with open("data/commands.json", "r", encoding='utf-8') as f:
