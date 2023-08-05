@@ -170,6 +170,28 @@ async def on_message(message):
         course_name = catalog_obj['name']
         prereqs = catalog_obj.get('raw', 'No prerequisites')
         await message.channel.send(f'**{dept} {course} - {course_name}**\n{prereqs}')
+    elif "?desc" in message.content:
+        args = message.content.split(' ')
+        if not 3 <= len(args) <= 4:
+            await message.channel.send(f'Usage: `?desc [department] [course]`, e.g. `?desc cmput 229`')
+            return
+        dept = args[1] if len(args) == 3 else args[1] + ' ' + args[2]
+        course = args[2] if len(args) == 3 else args[3]
+        dept, course = dept.upper(), course.upper()
+        if not dept in catalog['courses']:
+            await message.channel.send(f'Could not find **{dept}**')
+            return
+        if not course in catalog['courses'][dept]:
+            await message.channel.send(f'Could not find **{course}** in the {dept} department')
+            return
+        if not 'desc' in catalog['courses'][dept][course]:
+            await message.channel.send(f'There is no available course description for **{dept} {course}**.')
+            return
+        catalog_obj = catalog['courses'][dept][course]
+        course_name = catalog_obj['name']
+        course_faculty = catalog_obj['faculty']
+        course_desc = catalog_obj['desc']
+        await message.channel.send(f'**{dept} {course} - {course_name}**\n{course_faculty}\n{course_desc}')
     elif "?view" in message.content:
         errmsg = ''
         try:
