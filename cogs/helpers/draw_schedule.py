@@ -23,7 +23,7 @@ vertical_length_50 = 101
 color_scheme = (RED, YELLOW, GREEN, BLUE, PURPLE, PINK, TURQUOISE, ORANGE, DARKBLUE, CYAN)
 day_lookup = {'U': 0, 'M':1, 'T':2, 'W':3, 'H':4, 'F':5, 'S':6}
 
-font = ImageFont.truetype("fonts/tahoma.ttf", 19)
+__draw_sched_font = ImageFont.truetype("cogs/helpers/fonts/tahoma.ttf", 19)
 
 def str_t_to_int(str_t):
     h = int(str_t[0:2])
@@ -50,8 +50,8 @@ def get_draw_text(course_class, location=''):
         for i in range(len(instructor_full)-1):
             instructor_initials.append(instructor_full[i][0].upper() + '. ')
         instructor_text = ''.join(instructor_initials) + instructor_full[-1]
-        if font.getsize(instructor_text)[0] > box_width-3: # pop until fit with elipses
-            while font.getsize(instructor_text + '...')[0] > box_width-3:
+        if __draw_sched_font.getsize(instructor_text)[0] > box_width-3: # pop until fit with elipses
+            while __draw_sched_font.getsize(instructor_text + '...')[0] > box_width-3:
                 instructor_text = instructor_text[:-1]
             instructor_text += '...'
 
@@ -63,7 +63,7 @@ def get_draw_text(course_class, location=''):
 def draw_schedule(sched):
     print(sched)
     sched = sorted(sched, key=lambda x: x['objects']['course'])
-    image = Image.open("schedubuddy/boilerplate_full.png")
+    image = Image.open("cogs/helpers/boilerplate_full.png")
     draw = ImageDraw.Draw(image)
     min_y = 2147483647
     max_y = -2147483648
@@ -103,7 +103,7 @@ def draw_schedule(sched):
                 draw.rectangle([(r_x0-2, r_y0-2), (r_x1+2, r_y1+2)], fill=(0,0,0))
                 draw.rectangle([(r_x0, r_y0), (r_x1, r_y1)], fill = color)
                 location = location if location else 'TBD'
-                draw.text((r_x0+4, r_y0+2), get_draw_text(course_class, location=location), (0,0,0), font=font)
+                draw.text((r_x0+4, r_y0+2), get_draw_text(course_class, location=location), (0,0,0), font=__draw_sched_font)
 
     # get the y region
     boilerplate_width, boilerplate_height = image.size
