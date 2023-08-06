@@ -26,7 +26,6 @@ load_dotenv()
 app_id = os.getenv("DISCORD_APP_ID")
 client = commands.Bot(command_prefix='?', intents=discord.Intents.all(), application_id=app_id)
 
-# ?sched plugin
 
 # starboard
 starboard_messages = {}
