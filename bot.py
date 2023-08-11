@@ -1,14 +1,9 @@
 import discord
 from discord.ext import commands
-from datetime import datetime, timedelta
 import json
 from dotenv import load_dotenv
 import os
-import requests
-from io import BytesIO
 import random
-
-import util
 
 from cogs import setup_all_cogs
 
@@ -118,8 +113,6 @@ with open("data/commands.json", "r", encoding="utf-8") as f:
     cmds = json.load(f)
 with open("data/copypasta.json", "r", encoding="utf-8") as f:
     pastas = json.load(f)
-with open("data/ualberta.ca.json", "r", encoding="utf-8") as f:
-    catalog = json.load(f)
 
 
 @client.event
