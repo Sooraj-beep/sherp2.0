@@ -1,56 +1,80 @@
 import discord
+from discord import Embed, File, Attachment, Message
 from discord.ext import commands
 from datetime import datetime, timedelta
+from collections import defaultdict
 
 import aiohttp, os
+import asyncio
+from io import BytesIO
+
+from typing import List, Tuple
+
 
 class DeletedMsg:
-    def __init__(self, msg, attachment_path=None):
+    def __init__(self, msg: Message, attachments: List[Tuple[str, BytesIO]]):
         self.msg = msg
-        self.attachment_path = attachment_path
-        self.time = datetime.utcnow()
+        self.attachments = attachments
+
 
 SNIPE_TIMER = 10
+
+
 class Snipe(commands.Cog):
-    def __init__(self):
-        self.deleted_messages = {}
+    def __init__(self, bot, http_client):
+        self.__bot = bot
+        self.http = http_client
+        self.deleted_messages = defaultdict(lambda: set())
+        self.__lock = asyncio.Lock()
 
     async def cog_load(self):
         await super().cog_load()
         print("Snipe Cog loaded.")
 
-    async def save_attachment(self, attachment):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(attachment.url) as resp:
-                if resp.status != 200:
-                    return -1
-                filename = os.path.join('attachments', attachment.filename) # save to ./attachments
-                with open(filename, 'wb') as f:
-                    f.write(await resp.read())
-                return filename
+    async def save_attachment(self, attachment: Attachment):
+        async with self.http.get(attachment.url) as resp:
+            if resp.status != 200:
+                return attachment.filename, None
+            buf = BytesIO()
+            buf.write(await resp.read())
+            buf.seek(0)
+            return attachment.filename, buf
 
     @commands.command(name="snipe")
     async def snipe(self, ctx):
-        curr_time = datetime.utcnow()
-        msg = self.deleted_messages.pop(ctx.channel.id, None)
-        if not msg or curr_time - msg.time > timedelta(seconds=SNIPE_TIMER):
+        msgs = None
+        async with self.__lock:
+            msgs = self.deleted_messages[ctx.channel.id]
+
+        if not msgs:
             await ctx.send(f"Nothing found")
             return
-        embed = discord.Embed(description=f"**{msg.msg.author.name}** said: {msg.msg.content}", color=0x00ff00)
-        if msg.attachment_path:
-            file = discord.File(msg.attachment_path, filename=msg.attachment_path.split("/")[-1])
-            embed.set_image(url=f"attachment://{file.filename}")
-            await ctx.send(embed=embed, file=file)
-        else:
-            await ctx.send(embed=embed)
+
+        for msg in msgs:
+            heading = Embed(description=msg.msg.content, color=0x00FF00)
+            heading.set_author(name=msg.msg.author.name)
+            embeds = [heading]
+            files = [File(buf, filename=fname) for fname, buf in msg.attachments if buf]
+            embeds.extend(
+                [Embed().set_image(url=f"attachment://{f.filename}") for f in files]
+            )
+            await ctx.send(embeds=embeds, files=files)
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
-        attachment_path = None
+        attachments = []
         if message.attachments:
-            attachment_path = await self.save_attachment(message.attachments[0])
-        self.deleted_messages[message.channel.id] = DeletedMsg(message, attachment_path)
+            attachments = await asyncio.gather(
+                *[self.save_attachment(a) for a in message.attachments]
+            )
+        deleted_msg = DeletedMsg(message, attachments)
+        async with self.__lock:
+            self.deleted_messages[message.channel.id].add(deleted_msg)
+        await asyncio.sleep(SNIPE_TIMER)
+        async with self.__lock:
+            self.deleted_messages[message.channel.id].remove(deleted_msg)
 
-async def setup_snipe(bot, guilds):
-    cog = Snipe()
+
+async def setup_snipe(bot, guilds, client):
+    cog = Snipe(bot, client)
     await bot.add_cog(cog, guilds=guilds)
