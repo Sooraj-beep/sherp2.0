@@ -29,26 +29,5 @@
     "?vim": "vim is only used to clean toilets",
     "?nvim": "Compared to Vim, Neovim uses Lua, an actual programming language, to configure and extend the editor. This makes writing plugins and configuring Neovim easier compared to Vim's native Vimscript. Neovim is a great place to start learning Vim today, as it has so many awesome plugins.",
 
-    "//": "magic 8 ball",
-    "?8ball": [
-        "It is certain.",
-        "It is decidedly so.",
-        "Without a doubt.",
-        "Yes - definitely.",
-        "You may rely on it.",
-        "As I see it, yes.",
-        "Most likely.",
-        "Outlook good.",
-        "Yes.",
-        "Signs point to yes.",
-        "Thats a question for Sherp1.0",
-        "Shut up, nerd.",
-        "Ask again later.",
-        "Bro I'm busy rn.",
-        "ffs, not this again.",
-        "Only the mods of the server know that one.",
-        "Ask me once you get into faang."
-    ],
-
     "//": "end of document"
 }
