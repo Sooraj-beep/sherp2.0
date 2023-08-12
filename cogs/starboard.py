@@ -26,9 +26,9 @@ class Starboard(commands.Cog):
         btn = ui.Button(label="Jump", url=msg.jump_url)
         v = ui.View().add_item(btn)
         if msg.type == discord.MessageType.reply:
-            reply = msg.reference.cached_message
-            if not reply:
-                reply = await msg.channel.fetch_message(msg.reference.message_id)
+            reply = msg.reference.cached_message or await msg.channel.fetch_message(
+                msg.reference.message_id
+            )
             v.add_item(ui.Button(label="Context", url=reply.jump_url))
         return v
 
@@ -39,36 +39,47 @@ class Starboard(commands.Cog):
         old_view = await self._get_open_msg_view(react.message)
         await msg.edit(content=self._get_title(react), embeds=msg.embeds)
 
-    def _get_starboard_embed(
-        self, msg: discord.Message, add_author: bool = True
-    ) -> discord.Embed:
+    def _get_first_viable_attachment_url(self, atmnts: List[discord.Attachment]) -> str:
+        for a in atmnts:
+            if a.url.endswith(("png", "jpeg", "jpg", "gif", "webp")):
+                return a.url
+
+    def _get_starboard_embed(self, msg: discord.Message) -> discord.Embed:
         embed = discord.Embed(
             description=msg.content or msg.system_content,
             color=discord.Color.dark_green(),
-        )
+        ).set_author(name=msg.author.display_name, icon_url=msg.author.avatar.url)
 
-        for a in msg.attachments:
-            if a.url.endswith(("png", "jpeg", "jpg", "gif", "webp")):
-                embed.set_image(url=a.url)
-                break  # only one image embedded for now.
+        if u := self._get_first_viable_attachment_url(msg.attachments):
+            embed.set_image(url=u)
 
-        if add_author:
-            return embed.set_author(
-                name=msg.author.display_name, icon_url=msg.author.avatar.url
-            )
-        else:
-            return embed
+        return embed
 
     async def _build_embeds(self, msg: discord.Message) -> List[discord.Embed]:
+        main_embed = self._get_starboard_embed(msg)
         if msg.type == discord.MessageType.reply:
-            reply_to = msg.reference.cached_message
-            if not reply_to:
-                reply_to = await msg.channel.fetch_message(msg.reference.message_id)
-            embed = self._get_starboard_embed(msg)
-            reply_embed = self._get_starboard_embed(reply_to, False)
-            reply_embed.title = "Reply to this message:"
-            return [embed, reply_embed]
-        return [self._get_starboard_embed(msg)]
+            reply_to = msg.reference.cached_message or await msg.channel.fetch_message(
+                msg.reference.message_id
+            )
+            atcmnt_url = self._get_first_viable_attachment_url(reply_to.attachments)
+            # If the replied to message has no attachments, we simply add a field
+            # to the main embed.
+            if not atcmnt_url:
+                main_embed.add_field(
+                    name="Reply to the message:",
+                    value=reply_to.content or reply_to.system_content,
+                )
+                return [main_embed]
+
+            # If the replied-to message has attachments, we need another embed.
+            reply_embed = discord.Embed(
+                title="Reply to this message:",
+                description=reply_to.content or reply_to.system_content,
+                color=discord.Color.dark_green(),
+            ).set_image(url=atcmnt_url)
+
+            return [main_embed, reply_embed]
+        return [main_embed]
 
     async def create_starboard_post(self, react: discord.Reaction):
         embeds = await self._build_embeds(react.message)
