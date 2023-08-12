@@ -49,8 +49,8 @@ class Misc(commands.Cog):
         await ctx.send(f"Synced {len(commands)} commands")
 
     @commands.command(name="8ball")
-    async def eight_ball(self):
-        return random.choice(self.eight_ball_options)
+    async def eight_ball(self, ctx):
+        await ctx.send(random.choice(self.eight_ball_options))
 
 
 async def setup_misc_cog(bot, guilds):
