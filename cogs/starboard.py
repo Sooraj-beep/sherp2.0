@@ -35,8 +35,6 @@ class Starboard(commands.Cog):
     async def update_reaction_count(self, react: discord.Reaction) -> None:
         msg_id = self.starboard_msgs[react.message.id]
         msg: discord.Message = await self.starboard_channel.fetch_message(msg_id)
-        # No way to get the view from the old message
-        old_view = await self._get_open_msg_view(react.message)
         await msg.edit(content=self._get_title(react), embeds=msg.embeds)
 
     def _get_first_viable_attachment_url(self, atmnts: List[discord.Attachment]) -> str:
