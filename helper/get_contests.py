@@ -9,7 +9,7 @@ async def get_contests():
     contests = []
 
     async with http.get("https://open.kattis.com/problem-sources") as resp:
-        assert resp.status == 200
+        assert resp.status == 200, "Kattis responsed with non 200 status code!"
 
         html = await resp.text(encoding="utf-8")
         soup = BeautifulSoup(html, "html.parser")
@@ -18,7 +18,7 @@ async def get_contests():
             if not type(item) is bs4.element.Tag:
                 continue
             contest = item.a["href"].split("/")[-1]
-            assert contest
+            assert contest, "Contest url not found"
 
             contests.append(contest)
 

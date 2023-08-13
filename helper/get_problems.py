@@ -18,7 +18,7 @@ async def get_problems():
         print("Got page:", page)
         params["page"] = page
         async with http.get("https://open.kattis.com/problems", params=params) as resp:
-            assert resp.status == 200
+            assert resp.status == 200, "Kattis responsed with non 200 status code!"
             html = await resp.text(encoding="utf-8")
             soup = BeautifulSoup(html, "html.parser")
 
@@ -26,7 +26,7 @@ async def get_problems():
                 if not type(item) is bs4.element.Tag:
                     continue
                 problem_id = item.a["href"].split("/")[-1]
-                assert problem_id
+                assert problem_id, "Problem ID not valid"
 
                 match item.span.next_sibling.strip():
                     case "Easy":
@@ -36,7 +36,7 @@ async def get_problems():
                     case "Hard":
                         hard.append(problem_id)
                     case _:
-                        assert "Unknown problem difficulty" and False
+                        assert False, "Unknown problem difficulty"
         asyncio.sleep(3)
 
     print(f"Easy: {len(easy)}, Medium: {len(medium)}, Hard: {len(hard)}")
