@@ -4,9 +4,9 @@ from discord.ext import commands
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-import aiohttp, os
 import asyncio
 from io import BytesIO
+from helper import get_config
 
 from typing import List, Tuple
 
@@ -17,7 +17,8 @@ class DeletedMsg:
         self.attachments = attachments
 
 
-SNIPE_TIMER = 10
+__cfg = get_config().get("snipe", None)
+SNIPE_TIMER = __cfg.get("timer", 10) if __cfg else 10
 
 
 class Snipe(commands.Cog):

@@ -3,3 +3,4 @@ __pycache__/
 schedule.png
 env/
 attachments/
+bot_config.toml
