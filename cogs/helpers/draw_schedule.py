@@ -1,6 +1,5 @@
 from io import BytesIO
 
-# from sched_gen import generate_schedules
 from PIL import Image, ImageDraw, ImageFont
 from math import floor, ceil
 
@@ -93,7 +92,6 @@ def get_draw_text(course_class, location=""):
 
 
 def draw_schedule(sched):
-    print(sched)
     sched = sorted(sched, key=lambda x: x["objects"]["course"])
     image = Image.open("cogs/helpers/boilerplate_full.png")
     draw = ImageDraw.Draw(image)

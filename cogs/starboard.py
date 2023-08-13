@@ -40,12 +40,14 @@ class Starboard(commands.Cog):
     async def _get_open_msg_view(self, msg: discord.Message) -> ui.View:
         btn = ui.Button(label="Jump", url=msg.jump_url)
         v = ui.View().add_item(btn)
-        if msg.type == discord.MessageType.reply:
-            reply = msg.reference.cached_message or await msg.channel.fetch_message(
-                msg.reference.message_id
-            )
-            v.add_item(ui.Button(label="Context", url=reply.jump_url))
-        return v
+
+        if msg.type != discord.MessageType.reply:
+            return v
+
+        reply = msg.reference.cached_message or await msg.channel.fetch_message(
+            msg.reference.message_id
+        )
+        return v.add_item(ui.Button(label="Context", url=reply.jump_url))
 
     async def update_reaction_count(self, react: discord.Reaction) -> None:
         msg_id = self.starboard_msgs[react.message.id]
@@ -70,29 +72,31 @@ class Starboard(commands.Cog):
 
     async def _build_embeds(self, msg: discord.Message) -> List[discord.Embed]:
         main_embed = self._get_starboard_embed(msg)
-        if msg.type == discord.MessageType.reply:
-            reply_to = msg.reference.cached_message or await msg.channel.fetch_message(
-                msg.reference.message_id
+
+        if msg.type != discord.MessageType.reply:
+            return [main_embed]
+
+        reply_to = msg.reference.cached_message or await msg.channel.fetch_message(
+            msg.reference.message_id
+        )
+        atcmnt_url = self._get_first_viable_attachment_url(reply_to.attachments)
+        # If the replied to message has no attachments, we simply add a field
+        # to the main embed.
+        if not atcmnt_url:
+            main_embed.add_field(
+                name="Reply to the message:",
+                value=reply_to.content or reply_to.system_content,
             )
-            atcmnt_url = self._get_first_viable_attachment_url(reply_to.attachments)
-            # If the replied to message has no attachments, we simply add a field
-            # to the main embed.
-            if not atcmnt_url:
-                main_embed.add_field(
-                    name="Reply to the message:",
-                    value=reply_to.content or reply_to.system_content,
-                )
-                return [main_embed]
+            return [main_embed]
 
-            # If the replied-to message has attachments, we need another embed.
-            reply_embed = discord.Embed(
-                title="Reply to this message:",
-                description=reply_to.content or reply_to.system_content,
-                color=discord.Color.dark_green(),
-            ).set_image(url=atcmnt_url)
+        # If the replied-to message has attachments, we need another embed.
+        reply_embed = discord.Embed(
+            title="Reply to this message:",
+            description=reply_to.content or reply_to.system_content,
+            color=discord.Color.dark_green(),
+        ).set_image(url=atcmnt_url)
 
-            return [main_embed, reply_embed]
-        return [main_embed]
+        return [main_embed, reply_embed]
 
     async def create_starboard_post(self, react: discord.Reaction):
         embeds = await self._build_embeds(react.message)
