@@ -10,15 +10,14 @@ from helper import get_config
 
 from typing import List, Tuple
 
+__cfg = get_config().get("snipe", None)
+SNIPE_TIMER = __cfg.get("timer", 10) if __cfg else 10
+
 
 class DeletedMsg:
     def __init__(self, msg: Message, attachments: List[Tuple[str, BytesIO]]):
         self.msg = msg
         self.attachments = attachments
-
-
-__cfg = get_config().get("snipe", None)
-SNIPE_TIMER = __cfg.get("timer", 10) if __cfg else 10
 
 
 class Snipe(commands.Cog):
