@@ -1,6 +1,5 @@
 from io import BytesIO
 
-# from sched_gen import generate_schedules
 from PIL import Image, ImageDraw, ImageFont
 from math import floor, ceil
 
