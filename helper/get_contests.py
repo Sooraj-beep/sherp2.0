@@ -4,6 +4,7 @@ from aiohttp import ClientSession
 import asyncio
 import json
 
+
 async def get_contests():
     http = ClientSession()
     contests = []
@@ -28,5 +29,6 @@ async def get_contests():
 
     print("Done importing contests!")
     await http.close()
+
 
 asyncio.run(get_contests())
