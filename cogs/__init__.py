@@ -1,4 +1,4 @@
-from .schedulebuddy import setup_schedule_buddy
+from .schedubuddy import setup_schedule_buddy
 from .kattis import setup_kattis
 from .misc import setup_misc_cog
 from .snipe import setup_snipe

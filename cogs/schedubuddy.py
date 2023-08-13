@@ -1,15 +1,15 @@
-import discord
-from discord import Embed, Emoji
-from discord.ext import commands
-from discord import app_commands
-from aiohttp import ClientSession
-from cogs.helpers.draw_schedule import draw_schedule
-import json
-from urllib.parse import quote
-from io import BytesIO
 import asyncio
-
+import json
+from io import BytesIO
 from typing import Optional
+from urllib.parse import quote
+
+import discord
+from aiohttp import ClientSession
+from discord import Embed, app_commands
+from discord.ext import commands
+
+from cogs.helpers.draw_schedule import draw_schedule
 
 SCHEDUBUDDY_ROOT = "https://schedubuddy1.herokuapp.com/api/v1/"
 LEFT_EMOJI = "⬅️"
@@ -24,7 +24,7 @@ class ScheduleSession:
         start_pref: str,
         consec_pref: str,
         evening_pref: str,
-        http_client: str,
+        http_client: ClientSession,
         *courses,
     ):
         self.__bot = bot
@@ -120,7 +120,7 @@ class ScheduleSession:
 
     async def send_response(self, intr: discord.Interaction):
         if not self.pages:
-            intr.response.send_message("No schedule found!")
+            await intr.response.send_message("No schedule found!")
             return False
         embed, file = self.build_embed(intr.user.display_name, self.pages[0])
         channel = self.__bot.get_channel(intr.channel_id)
@@ -152,7 +152,7 @@ class ScheduleSession:
         print("Tried to update the schedule embed")
 
 
-class ScheduleBuddy(commands.GroupCog, name="schedubuddy"):
+class Schedubuddy(commands.GroupCog, name="schedubuddy"):
     def __init__(self, bot, http_client):
         self.http = http_client
         self.__bot = bot
@@ -286,5 +286,5 @@ class ScheduleBuddy(commands.GroupCog, name="schedubuddy"):
 
 
 async def setup_schedule_buddy(bot, guilds, client):
-    cog = ScheduleBuddy(bot, client)
+    cog = Schedubuddy(bot, client)
     await bot.add_cog(cog, guilds=guilds)

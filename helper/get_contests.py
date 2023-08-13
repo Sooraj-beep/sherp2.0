@@ -1,32 +1,34 @@
+import bs4
 from bs4 import BeautifulSoup
-import requests
+from aiohttp import ClientSession
+import asyncio
 import json
 
-LAST_PAGE = 37  # can change as kattis adds more problems
 
-contests = []
+async def get_contests():
+    http = ClientSession()
+    contests = []
 
-link = f"https://open.kattis.com/problem-sources"
+    async with http.get("https://open.kattis.com/problem-sources") as resp:
+        assert resp.status == 200, "Kattis responsed with non 200 status code!"
 
-r = requests.get(link)
+        html = await resp.text(encoding="utf-8")
+        soup = BeautifulSoup(html, "html.parser")
 
-assert r.status_code == 200
+        for item in soup.tbody.children:
+            if not type(item) is bs4.element.Tag:
+                continue
+            contest = item.a["href"].split("/")[-1]
+            assert contest, "Contest url not found"
 
-html = r.content.decode("utf-8")
-soup = BeautifulSoup(html, "html.parser")
+            contests.append(contest)
 
-for item in soup.tbody.children:
-    if str(item)[0] == "<":
-        child = BeautifulSoup(str(item), "html.parser")
-        contest = child.a["href"].split("/")[-1]
+    data = {"contests": contests}
+    with open("../data/contests.json", "w") as f:
+        json.dump(data, f)
 
-        assert contest != ""
+    print("Done importing contests!")
+    await http.close()
 
-        contests.append(contest)
 
-data = {"contests": contests}
-
-with open("../data/contests.json", "w") as f:
-    json.dump(data, f)
-
-print("Done importing contests! 🥳")
+asyncio.run(get_contests())
