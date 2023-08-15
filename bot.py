@@ -45,7 +45,6 @@ async def update_title(reaction_count, message):
 @client.event
 async def on_ready():
     await setup_all_cogs(client, GUILDS)
-    await client.tree.sync(guild=GUILDS[1])
 
 
 @client.event
