@@ -32,12 +32,12 @@ class Misc(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    # @commands.command(name="sync")
-    # async def sync(self, ctx):
-    #     # commands = self.__bot.tree.get_commands(guild=ctx.guild)
-    #     commands = await self.__bot.tree.sync(guild=ctx.guild)
-    #     print("Sync complete")
-    #     await ctx.send(f"Synced {len(commands)} commands")
+    @commands.command(name="sync")
+    async def sync(self, ctx):
+        # commands = self.__bot.tree.get_commands(guild=ctx.guild)
+        commands = await self.__bot.tree.sync(guild=ctx.guild)
+        print("Sync complete")
+        await ctx.send(f"Synced {len(commands)} commands")
 
 
 async def setup_misc_cog(bot, guilds):
