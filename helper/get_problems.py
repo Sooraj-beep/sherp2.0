@@ -1,54 +1,50 @@
+import bs4
 from bs4 import BeautifulSoup
-import requests
+from aiohttp import ClientSession
+import asyncio
 import json
 
-LAST_PAGE = 37 # can change as kattis adds more problems
-
-easy = []
-medium = []
-hard = []
-
-page = 0
-
-while page < LAST_PAGE:
-    print('Got Page:', page)
-    if page == 0:
-        link = 'https://open.kattis.com/problems?order=-difficulty_category&dir=desc'
-    else: 
-        link = f'https://open.kattis.com/problems?page={page}&order=-difficulty_category&dir=desc'
-        
-    r = requests.get(link)
-
-    assert(r.status_code == 200)
-
-    html = r.content.decode('utf-8')
-    soup = BeautifulSoup(html, 'html.parser')
-
-    for item in soup.tbody.children:
-        if str(item)[0] == '<':
-            child = BeautifulSoup(str(item), 'html.parser')
-            problem_id = child.a['href'].split('/')[-1]
-
-            assert(problem_id != '')
+LAST_PAGE = 37  # can change as kattis adds more problems
 
 
-            if str(child.span.next_sibling).strip() == "Easy":
-                easy.append(problem_id)
-            elif str(child.span.next_sibling).strip() == "Medium":
-                medium.append(problem_id)
-            else:
-                hard.append(problem_id)
-            
-    print(f'Easy: {len(easy)}, Medium: {len(medium)}, Hard: {len(hard)}')
+async def get_problems():
+    easy = []
+    medium = []
+    hard = []
+    http = ClientSession()
 
-    page += 1
+    params = {"order": "-difficulty_category", "dir": "desc"}
+    for page in range(LAST_PAGE):
+        print("Got page:", page)
+        params["page"] = page
+        async with http.get("https://open.kattis.com/problems", params=params) as resp:
+            assert resp.status == 200, "Kattis responsed with non 200 status code!"
+            html = await resp.text(encoding="utf-8")
+            soup = BeautifulSoup(html, "html.parser")
 
-data = {
-    "easy": easy,
-    "medium": medium,
-    "hard": hard
-}
+            for item in soup.tbody.children:
+                if not type(item) is bs4.element.Tag:
+                    continue
+                problem_id = item.a["href"].split("/")[-1]
+                assert problem_id, "Problem ID not valid"
 
-with open("../data/problems.json", "w") as f:
-    json.dump(data, f)
-print("Done getting problems! 🥳")
+                match item.span.next_sibling.strip():
+                    case "Easy":
+                        easy.append(problem_id)
+                    case "Medium":
+                        medium.append(problem_id)
+                    case "Hard":
+                        hard.append(problem_id)
+                    case _:
+                        assert False, "Unknown problem difficulty"
+        asyncio.sleep(3)
+
+    print(f"Easy: {len(easy)}, Medium: {len(medium)}, Hard: {len(hard)}")
+    data = {"easy": easy, "medium": medium, "hard": hard}
+    with open("../data/problems.json", "w") as f:
+        json.dump(data, f)
+    print("Done getting problems!")
+    await http.close()
+
+
+asyncio.run(get_problems())
