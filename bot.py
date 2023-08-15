@@ -6,6 +6,7 @@ import os
 import random
 
 from cogs import setup_all_cogs
+from typing import Optional
 
 
 SHERP_ID = "212613981465083906"
@@ -124,21 +125,27 @@ async def on_message_delete(message):
         del starboard_messages[message.id]
 
 
+# A command is trivial if its response is static string. These commands can 
+# defined in a single file along with their responses.
+def is_trivial_command(c: str) -> Optional[str]:
+    cmd = c.strip()
+    if not cmd.startswith("?"):
+        return None
+    if cmd.count(" "):
+        return None
+
+    return cmds.get(cmd.lower(), None)
+
+
 @client.event
 async def on_message(message: discord.Message):
     if message.author.bot:
         return
-    if message.content in cmds and message.content != "//":
-        # if string return string, if list return random element
-        if type(cmds[message.content]) == list:
-            response = random.choice(cmds[message.content])
-        else:
-            response = cmds[message.content]
-        await message.channel.send(
-            SHERP_URL + response if message.author.id == SHERP_ID else response
-        )
+
+    if resp := is_trivial_command(message.content):
+        await message.channel.send(resp)
         return
-    # find message.content in commands.json and append msg with the value
+
     elif "?pasta" in message.content:
         # pick a random copypasta from copypasta.json
         await message.channel.send(random.choice(pastas))
