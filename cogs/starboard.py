@@ -12,7 +12,7 @@ __cfg = get_config().get("starboard", None)
 STARBOARD_CHANNEL_ID = (
     __cfg.get("channel", __DEFAULT_CHANNEL_ID) if __cfg else __DEFAULT_CHANNEL_ID
 )
-ON_PHONE_EMOJI_STR = (
+STARBOARD_EMOJI_STR = (
     __cfg.get("emoji", __DEFAULT_EMOJI_STR) if __cfg else __DEFAULT_EMOJI_STR
 )
 
@@ -23,7 +23,7 @@ STARBOARD_THESHOLD = (
 
 class Starboard(commands.Cog):
     def __init__(self, bot: discord.Client):
-        self.starboard_emoji_str = ON_PHONE_EMOJI_STR
+        self.starboard_emoji_str = STARBOARD_EMOJI_STR
         self.threshold = STARBOARD_THESHOLD
         # Starboarded Message ID -> ID of the message the bot sent.
         self.starboard_msgs = dict()
