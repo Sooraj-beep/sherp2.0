@@ -1,6 +1,6 @@
 # sherp2.0
 
-sherp2.0 is a discord bot that answers frequently asked questions for students at the University of Alberta. It is currently operable on the unofficial University of Alberta CS discord. Students contribute to the bots knowledge database by contributing to `commands.json`
+sherp2.0 is a discord bot that answers frequently asked questions for students at the University of Alberta. It is currently operable on the unofficial University of Alberta CS discord server. Students can contribute to the bots knowledge database by contributing to `data`
 
 ## Features
 - [schedubuddy](https://schedubuddy.com/) integration (credit: @aarctan):
@@ -15,7 +15,7 @@ sherp2.0 is a discord bot that answers frequently asked questions for students a
 - Shortcuts to copypastas popular on the CS dicord server
 
 ## Running the bot locally
-**Note:** If all you want to do is add new commands then you dont need to setup the bot, You can just clone the repo and contribute to `commands.json`. For more advanced changes, it is recommended to get a discord bot running locally to test functionality.
+**Note:** If all you want to do is add new commands then you dont need to setup the bot, You can just clone the repo and contribute to `data/commands.json` or any of the other files in `data` folder. For more advanced changes, it is recommended to get a discord bot running locally to test functionality.
 
 Here are the steps you need to follow if you want to run the bot locally for testing purposes:
 
