@@ -30,7 +30,7 @@ Here are the steps you need to follow if you want to run the bot locally for tes
     * Once created, you will be redirected to the bot dashboard where you can configure its settings.
          1. Select the Bot section under settings, click on Reset Token, and save the token somewhere (you will need it later).
          2. You will also need the bots application ID. This can also be found in the developer dashboard under General Information.
-         3. Scroll down and check all options under Priviliedged Gateway Intents then save changes.
+         3. Scroll down and check all options under Privileged Gateway Intents then save changes.
          4. Under OAuth2 select URL Generator and select bot from SCOPES.
          5. under bot permissions check the following:
              * Read Messages/View Channels
