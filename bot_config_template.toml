@@ -11,6 +11,6 @@ timer=10
 channel=1139734225390669875         # The channel ID where the bot should post the starboard
                                     # messages.
 emoji="<:OnP:1139749947357544500>"  # The string representation of the emoji to be used
-                                    # as a starboard emoji.
+                                    # as the starboard emoji.
 threshold=1                         # The threshold over which the message is posted to the
                                     # starboard channel.
