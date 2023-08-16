@@ -1,0 +1,16 @@
+# The actual file used for config should be named "bot_config.toml" and should be
+# placed in the same directory as bot.py. (Eg. this file is in the correct location.)
+
+
+# Configuration style to be followed is one top-level table per cog being configured.
+
+[snipe]      # This lets us know that the following configuration is for the snipe cog
+timer=10
+
+[starboard]  # Similarly this is for the starboard cog.
+channel=1139734225390669875         # The channel ID where the bot should post the starboard
+                                    # messages.
+emoji="<:OnP:1139749947357544500>"  # The string representation of the emoji to be used
+                                    # as a starboard emoji.
+threshold=1                         # The threshold over which the message is posted to the
+                                    # starboard channel.
