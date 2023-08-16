@@ -1,7 +1,6 @@
 from typing import List, Optional
 import discord
 from discord.ext import commands
-from discord import ui
 
 from helper import get_config
 
@@ -37,9 +36,9 @@ class Starboard(commands.Cog):
     def _get_title(self, react: discord.Reaction) -> str:
         return f"{self.starboard_emoji_str} x **{react.count}** |{react.message.channel.mention}"
 
-    async def _get_open_msg_view(self, msg: discord.Message) -> ui.View:
-        btn = ui.Button(label="Jump", url=msg.jump_url)
-        v = ui.View().add_item(btn)
+    async def _get_open_msg_view(self, msg: discord.Message) -> discord.ui.View:
+        btn = discord.ui.Button(label="Jump", url=msg.jump_url)
+        v = discord.ui.View().add_item(btn)
 
         if msg.type != discord.MessageType.reply:
             return v
@@ -47,12 +46,12 @@ class Starboard(commands.Cog):
         reply = msg.reference.cached_message or await msg.channel.fetch_message(
             msg.reference.message_id
         )
-        return v.add_item(ui.Button(label="Context", url=reply.jump_url))
+        return v.add_item(discord.ui.Button(label="Context", url=reply.jump_url))
 
     async def update_reaction_count(self, react: discord.Reaction) -> None:
         msg_id = self.starboard_msgs[react.message.id]
         msg: discord.Message = await self.starboard_channel.fetch_message(msg_id)
-        await msg.edit(content=self._get_title(react), embeds=msg.embeds)
+        await msg.edit(content=self._get_title(react))
 
     def _get_first_viable_attachment_url(self, atmnts: List[discord.Attachment]) -> str:
         for a in atmnts:

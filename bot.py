@@ -37,6 +37,8 @@ with open("data/copypasta.json", "r", encoding="utf-8") as f:
     pastas = json.load(f)
 
 
+# A command is trivial if its response is static string. These commands can
+# defined in a single file along with their responses.
 def is_trivial_command(c: str) -> Optional[str]:
     cmd = c.strip()
     if not cmd.startswith("?"):
@@ -44,7 +46,7 @@ def is_trivial_command(c: str) -> Optional[str]:
     if cmd.count(" "):
         return None
 
-    return cmds.get(cmd, None)
+    return cmds.get(cmd.lower(), None)
 
 
 @client.event
