@@ -14,12 +14,12 @@ jobs:
         
       - name: Pull JSON file
         run: |
-          curl -o data.json -LJO https://raw.githubusercontent.com/steventango/synapse/main/data/ualberta.ca.json
+          curl -o data/ualberta.ca.json -LJ https://raw.githubusercontent.com/steventango/synapse/main/data/ualberta.ca.json
           
       - name: Commit and push changes
         run: |
-          git config --global user.email "actions@example.com"
-          git config --global user.name "GitHub Actions"
-          git add data.json
-          git commit -m "Update JSON file"
+          git config --global user.email "arakkals@ualberta.ca"
+          git config --global user.name "Sooraj-beep"
+          git add data/ualberta.ca.json
+          git commit -m "Update course data"
           git push
