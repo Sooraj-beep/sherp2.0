@@ -1,0 +1,25 @@
+name: Weekly JSON Pull of course data
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"  # Run every Sunday at midnight
+
+jobs:
+  pull_json:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Pull JSON file
+        run: |
+          curl -o data.json -LJO https://raw.githubusercontent.com/username/repo/master/path/to/your/file.json
+          
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "actions@example.com"
+          git config --global user.name "GitHub Actions"
+          git add data.json
+          git commit -m "Update JSON file"
+          git push
