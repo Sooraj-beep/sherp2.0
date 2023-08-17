@@ -2,7 +2,7 @@ name: Weekly JSON Pull of course data
 
 on:
   schedule:
-    - cron: "0 0 * * 0"  # Run every Sunday at midnight
+    - cron: "0 0 * * 1"  # Run every Monday at midnight
 
 jobs:
   pull_json:
@@ -14,7 +14,7 @@ jobs:
         
       - name: Pull JSON file
         run: |
-          curl -o data.json -LJO https://raw.githubusercontent.com/username/repo/master/path/to/your/file.json
+          curl -o data.json -LJO https://raw.githubusercontent.com/steventango/synapse/main/data/ualberta.ca.json
           
       - name: Commit and push changes
         run: |
