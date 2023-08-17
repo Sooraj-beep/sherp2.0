@@ -1,15 +1,30 @@
-from typing import List, Optional
+from typing import List
 import discord
 from discord.ext import commands
 
-STARBOARD_CHANNEL_ID = 1133260871049691257  # 1139734225390669875
-ON_PHONE_EMOJI_STR = "<:OnPhone:1062142401973588039>"  # "<:OnP:1139749947357544500>"
+from helper import get_config
+
+__DEFAULT_CHANNEL_ID = 1133260871049691257
+__DEFAULT_EMOJI_STR = "<:OnPhone:1062142401973588039>"
+__DEFAULT_THRESHOLD = 3
+
+__cfg = get_config().get("starboard", None)
+STARBOARD_CHANNEL_ID = (
+    __cfg.get("channel", __DEFAULT_CHANNEL_ID) if __cfg else __DEFAULT_CHANNEL_ID
+)
+STARBOARD_EMOJI_STR = (
+    __cfg.get("emoji", __DEFAULT_EMOJI_STR) if __cfg else __DEFAULT_EMOJI_STR
+)
+
+STARBOARD_THESHOLD = (
+    __cfg.get("threshold", __DEFAULT_THRESHOLD) if __cfg else __DEFAULT_THRESHOLD
+)
 
 
 class Starboard(commands.Cog):
     def __init__(self, bot: discord.Client):
-        self.starboard_emoji_str = ON_PHONE_EMOJI_STR
-        self.threshold = 3
+        self.starboard_emoji_str = STARBOARD_EMOJI_STR
+        self.threshold = STARBOARD_THESHOLD
         # Starboarded Message ID -> ID of the message the bot sent.
         self.starboard_msgs = dict()
         self.starboard_channel = bot.get_channel(STARBOARD_CHANNEL_ID)
