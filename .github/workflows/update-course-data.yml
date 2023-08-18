@@ -18,7 +18,7 @@ jobs:
           
       - name: Commit and push changes
         run: |
-          git config --global user.email "arakkals@ualberta.ca"
+          git config --global user.email "55115712+Sooraj-beep@users.noreply.github.com"
           git config --global user.name "Sooraj-beep"
           git add data/ualberta.ca.json
           git commit -m "Update course data"
