@@ -1,6 +1,11 @@
 # The actual file used for config should be named "bot_config.toml" and should be
 # placed in the same directory as bot.py. (Eg. this file is in the correct location.)
 
+# General information required for the bot to function are filled under this header.
+
+[general]
+guild_ids=[] # list of server IDs that the bot is a part of
+
 
 # Configuration style to be followed is one top-level table per cog being configured.
 

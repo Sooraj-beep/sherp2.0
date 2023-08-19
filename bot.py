@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import os
 import random
 
+from helper import get_config
+
 from cogs import setup_all_cogs
 from typing import Optional
 
@@ -22,7 +24,9 @@ client = commands.Bot(
 )
 
 
-GUILDS = [discord.Object(id=1137183815949881357), discord.Object(id=402891511991369740)]
+__cfg = get_config().get("general", None)
+GUILDS = [discord.Object(id=gid) for gid in __cfg.get("guild_ids", [])] if __cfg else []
+# GUILDS = [discord.Object(id=1137183815949881357), discord.Object(id=402891511991369740), discord.Object(id=888824875345666100)]
 
 
 @client.event
