@@ -13,6 +13,7 @@ from typing import Optional
 
 SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
+__DEFAULT_GUILDS = [402891511991369740] # UAlberta CS server ID
 
 # load the .env file
 load_dotenv()
@@ -25,7 +26,7 @@ client = commands.Bot(
 
 
 __cfg = get_config().get("general", None)
-GUILDS = [discord.Object(id=gid) for gid in __cfg.get("guild_ids", [])] if __cfg else []
+GUILDS = [discord.Object(id=gid) for gid in __cfg.get("guild_ids", __DEFAULT_GUILDS)] if __cfg else __DEFAULT_GUILDS
 
 @client.event
 async def on_ready():
