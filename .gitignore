@@ -4,4 +4,3 @@ schedule.png
 env/
 attachments/
 bot_config.toml
-.github/workflows/update-course-data.yml
