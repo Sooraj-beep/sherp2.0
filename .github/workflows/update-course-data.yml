@@ -4,6 +4,9 @@ on:
   schedule:
     - cron:  "* 1 * * *" # Every day for debugging purposes
     # - cron: "0 0 * * 1"  # Run every Monday at midnight
+  push:
+    branches:
+      - weekly-ualberta-json-update
 
 jobs:
   pull_json:
