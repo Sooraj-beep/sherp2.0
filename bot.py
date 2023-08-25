@@ -5,12 +5,15 @@ from dotenv import load_dotenv
 import os
 import random
 
+from helper import get_config
+
 from cogs import setup_all_cogs
 from typing import Optional
 
 
 SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
+__DEFAULT_GUILDS = [402891511991369740] # UAlberta CS server ID
 
 # load the .env file
 load_dotenv()
@@ -22,8 +25,8 @@ client = commands.Bot(
 )
 
 
-GUILDS = [discord.Object(id=1137183815949881357), discord.Object(id=402891511991369740)]
-
+__cfg = get_config().get("general", None)
+GUILDS = [discord.Object(id=gid) for gid in __cfg.get("guild_ids", __DEFAULT_GUILDS)] if __cfg else __DEFAULT_GUILDS
 
 @client.event
 async def on_ready():
