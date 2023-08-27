@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  pull_json:
+  update_json:
     runs-on: ubuntu-latest
     
     steps:
@@ -17,18 +17,16 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Pull JSON file
+      # compare the pulled data with the existing data, if no changes, then exit
         run: |
           curl -o data/ualberta.ca.json -LJ https://raw.githubusercontent.com/steventango/synapse/main/data/ualberta.ca.json
-          
-      # - name: Commit and push changes
-      #   run: |
-      #     git config --global user.email "55115712+Sooraj-beep@users.noreply.github.com"
-      #     git config --global user.name "Sooraj-beep"
-      #     git checkout -b weekly-ualberta-json-pull
-      #     git add data/ualberta.ca.json
-      #     git commit -m "Update course data"
-      #     git push --set-upstream origin weekly-ualberta-json-pull
-      
+          git diff --exit-code --quiet data/ualberta.ca.json
+          if [ $? -eq 0 ]
+          then
+            echo "No changes detected, exiting"
+            exit 0
+          fi
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
