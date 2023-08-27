@@ -20,11 +20,18 @@ jobs:
       # compare the pulled data with the existing data, if no changes, then exit
         run: |
           curl -o data/ualberta.ca.json -LJ https://raw.githubusercontent.com/steventango/synapse/main/data/ualberta.ca.json
+        continue-on-error: true
+
+      - name: Check for changes
+        id: check-changes
+        run: |
           git diff --exit-code --quiet data/ualberta.ca.json
-          if [ $? -eq 0 ]
-          then
-            echo "No changes detected, exiting"
+          if [ $? -eq 0 ]; then
+            echo "No changes detected"
             exit 0
+          else
+            echo "Changes detected"
+            exit 1
           fi
 
       - name: Create Pull Request
