@@ -30,7 +30,19 @@ class Misc(commands.Cog):
             url="https://cdn.discordapp.com/attachments/968245983697842196/1101298256459346000/IMG_2316.jpg"
         )
         await ctx.send(embed=embed)
-
+    
+    @commands.command(name="beach")
+    async def beach(self, ctx):
+        embed = discord.Embed(
+            title="beach",
+            color=3447003,
+            description="the sun can't outshine my despair",
+        )
+        embed.set_image(
+            url="https://images-ext-2.discordapp.net/external/cZLn5SlZBKlFg0XB9XGjo3skYghmOo1HF18rQaV5Kdk/%3Fsize%3D600/https/cdn.discordapp.com/banners/402891511991369740/f685e66edfa9f8477f2d65d6c53dd884.webp?width=1200&height=674"
+        )
+        await ctx.send(embed=embed)
+    
     @commands.command(name="java")
     async def java(self, ctx):
         embed = discord.Embed(
