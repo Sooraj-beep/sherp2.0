@@ -12,7 +12,7 @@ sherp2.0 is a discord bot that answers frequently asked questions for students a
 - Starboard (credit: @ArtDynasty13)
 - Magic 8-ball
 - Shortcuts to many well known facts
-- Shortcuts to copypastas popular on the CS discord server
+- Shortcuts to copypastas popular on the CS discod server
 
 ## Running the bot locally
 **Note:** If all you want to do is add new commands then you dont need to setup the bot, You can just clone the repo and contribute to `data/commands.json` or any of the other files in `data` folder. For more advanced changes, it is recommended to get a discord bot running locally to test functionality.
