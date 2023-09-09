@@ -19,3 +19,6 @@ emoji="<:OnP:1139749947357544500>"  # The string representation of the emoji to 
                                     # as the starboard emoji.
 threshold=1                         # The threshold over which the message is posted to the
                                     # starboard channel.
+
+[faq]
+gsheet_url = "https://docs.google.com/spreadsheets/d/15vOVv21KZETGxBEBY46H-l5C0WFjLaBUg1xUzFvSk6I/edit#gid=0"
