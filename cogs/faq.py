@@ -94,6 +94,33 @@ class Faq(commands.GroupCog, name="faq"):
                 return
 
         await intr.response.send_message("Prefix not found!")
+    
+    # faq edit <prefix> <question> <answer> <category>
+    @app_commands.command(
+        name="edit", description="edit a question from the faq sheet"
+    )
+    @app_commands.describe(prefix="Prefix to edit")
+    @app_commands.describe(question="Question to edit")
+    @app_commands.describe(answer="Answer to edit")
+    @app_commands.describe(category="Category to edit")
+    async def edit(self, intr: discord.Interaction, prefix: str, question: str = None, answer: str = None, category: str = None):
+        data = self.faq_sheet.get_all_records()
+        df = pd.DataFrame(data)
+
+        # edit the row with the prefix
+        for index, row in df.iterrows():
+            if row['Prefix'] == prefix:
+                if question != None:
+                    self.faq_sheet.update_cell(index + 2, 1, question)
+                if answer != None:
+                    self.faq_sheet.update_cell(index + 2, 2, answer)
+                if category != None:
+                    self.faq_sheet.update_cell(index + 2, 4, category)
+                await intr.response.send_message("Edited question from faq sheet!")
+                return
+            
+        await intr.response.send_message("Prefix not found!")
+
 
 
 async def setup_faq(bot, guilds):
