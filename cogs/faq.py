@@ -19,6 +19,10 @@ class Faq(commands.GroupCog, name="faq"):
 
     async def load_sheet(self):
         self.faq_sheet = await get_sheet()
+    
+    def isAdmin(self, user):
+        mod_role = discord.utils.get(user.guild.roles, name="mod")
+        return mod_role in user.roles
 
     @app_commands.command(
         name="list", description="view everything in the faq sheet"
@@ -63,6 +67,11 @@ class Faq(commands.GroupCog, name="faq"):
     @app_commands.describe(prefix="Prefix to add")
     @app_commands.describe(category="Category to add")
     async def new(self, intr: discord.Interaction, question: str, answer: str, prefix: str, category: str = None):
+
+        if not self.isAdmin(intr.user):
+            await intr.response.send_message("You do not have permission to modify the faq sheet!")
+            return
+        
         if category == None:
             category = "General"
 
@@ -83,6 +92,11 @@ class Faq(commands.GroupCog, name="faq"):
     )
     @app_commands.describe(prefix="Prefix to delete")
     async def delete(self, intr: discord.Interaction, prefix: str):
+
+        if not self.isAdmin(intr.user):
+            await intr.response.send_message("You do not have permission to modify the faq sheet!")
+            return
+
         data = self.faq_sheet.get_all_records()
         df = pd.DataFrame(data)
 
@@ -104,6 +118,11 @@ class Faq(commands.GroupCog, name="faq"):
     @app_commands.describe(answer="Answer to edit")
     @app_commands.describe(category="Category to edit")
     async def edit(self, intr: discord.Interaction, prefix: str, question: str = None, answer: str = None, category: str = None):
+
+        if not self.isAdmin(intr.user):
+            await intr.response.send_message("You do not have permission to modify the faq sheet!")
+            return
+
         data = self.faq_sheet.get_all_records()
         df = pd.DataFrame(data)
 
