@@ -77,6 +77,24 @@ class Faq(commands.GroupCog, name="faq"):
         self.faq_sheet.append_row([question, answer, 1, category, prefix])
         await intr.response.send_message("Added new question to faq sheet!")
 
+    # faq delete <prefix>
+    @app_commands.command(
+        name="delete", description="delete a question from the faq sheet"
+    )
+    @app_commands.describe(prefix="Prefix to delete")
+    async def delete(self, intr: discord.Interaction, prefix: str):
+        data = self.faq_sheet.get_all_records()
+        df = pd.DataFrame(data)
+
+        # delete the row with the prefix
+        for index, row in df.iterrows():
+            if row['Prefix'] == prefix:
+                self.faq_sheet.delete_row(index + 2)
+                await intr.response.send_message("Deleted question from faq sheet!")
+                return
+
+        await intr.response.send_message("Prefix not found!")
+
 
 async def setup_faq(bot, guilds):
     cog = Faq()
