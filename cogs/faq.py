@@ -7,6 +7,15 @@ from discord.ext import commands
 from discord import app_commands
 from discord.app_commands import Choice
 from cogs.helpers.gspread_client import get_sheet
+from helper import get_config
+
+
+__cfg = get_config().get("faq", None)
+
+ADMIN_ROLE = (
+    __cfg.get("admin_role_name") if __cfg else "mod"
+)
+
 
 
 class Faq(commands.GroupCog, name="faq"):
@@ -21,7 +30,7 @@ class Faq(commands.GroupCog, name="faq"):
         self.faq_sheet = await get_sheet()
     
     def isAdmin(self, user):
-        mod_role = discord.utils.get(user.guild.roles, name="mod")
+        mod_role = discord.utils.get(user.guild.roles, name=ADMIN_ROLE)
         return mod_role in user.roles
 
     @app_commands.command(

@@ -4,8 +4,6 @@ import gspread
 from helper import get_config
 
 __cfg = get_config().get("faq", None)
-print("this is cfg", __cfg)
-
 GSHEET_URL = (
     __cfg.get("gsheet_url") if __cfg else None
 )

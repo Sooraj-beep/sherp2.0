@@ -21,4 +21,5 @@ threshold=1                         # The threshold over which the message is po
                                     # starboard channel.
 
 [faq]
-gsheet_url = "https://docs.google.com/spreadsheets/d/15vOVv21KZETGxBEBY46H-l5C0WFjLaBUg1xUzFvSk6I/edit#gid=0"
+gsheet_url = "https://docs.google.com/spreadsheets/d/15vOVv21KZETGxBEBY46H-l5C0WFjLaBUg1xUzFvSk6I/edit#gid=0" # replace this url with your gsheet url
+admin_role_name = "mod" # add the name of the role that provides users with elevated permissions to add/delete/modify FAQs
