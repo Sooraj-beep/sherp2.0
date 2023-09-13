@@ -8,8 +8,6 @@ GSHEET_URL = (
     __cfg.get("gsheet_url") if __cfg else None
 )
 
-
-
 async def get_sheet():
     f = open("sherp-service-account-key.json", "r")
     service_account_key = json.load(f)
