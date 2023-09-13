@@ -1,11 +1,7 @@
-# import random
-# import json
 import pandas as pd
-
 import discord
 from discord.ext import commands
 from discord import app_commands
-from discord.app_commands import Choice
 from cogs.helpers.gspread_client import get_sheet
 from helper import get_config
 
@@ -15,8 +11,6 @@ __cfg = get_config().get("faq", None)
 ADMIN_ROLE = (
     __cfg.get("admin_role_name") if __cfg else "mod"
 )
-
-
 
 class Faq(commands.GroupCog, name="faq"):
     def __init__(self):
@@ -39,8 +33,6 @@ class Faq(commands.GroupCog, name="faq"):
     async def list(self, intr: discord.Interaction):
         data = self.faq_sheet.get_all_records()
         df = pd.DataFrame(data)
-
-        # make an embed with bolded question followed by (prefix: prefix) and in newline plain text the answer
         embed = discord.Embed(title="Frequently Asked Questions", color=0x00ff00)
         for index, row in df.iterrows():
             header = "**" + row['Question'] + "**" + " (prefix: " + row['Prefix'] + ")"
@@ -76,7 +68,6 @@ class Faq(commands.GroupCog, name="faq"):
     @app_commands.describe(prefix="Prefix to add")
     @app_commands.describe(category="Category to add")
     async def new(self, intr: discord.Interaction, question: str, answer: str, prefix: str, category: str = None):
-
         if not self.isAdmin(intr.user):
             await intr.response.send_message("You do not have permission to modify the faq sheet!")
             return
@@ -101,7 +92,6 @@ class Faq(commands.GroupCog, name="faq"):
     )
     @app_commands.describe(prefix="Prefix to delete")
     async def delete(self, intr: discord.Interaction, prefix: str):
-
         if not self.isAdmin(intr.user):
             await intr.response.send_message("You do not have permission to modify the faq sheet!")
             return
@@ -127,7 +117,6 @@ class Faq(commands.GroupCog, name="faq"):
     @app_commands.describe(answer="Answer to edit")
     @app_commands.describe(category="Category to edit")
     async def edit(self, intr: discord.Interaction, prefix: str, question: str = None, answer: str = None, category: str = None):
-
         if not self.isAdmin(intr.user):
             await intr.response.send_message("You do not have permission to modify the faq sheet!")
             return
@@ -148,8 +137,6 @@ class Faq(commands.GroupCog, name="faq"):
                 return
             
         await intr.response.send_message("Prefix not found!")
-
-
 
 async def setup_faq(bot, guilds):
     cog = Faq()
