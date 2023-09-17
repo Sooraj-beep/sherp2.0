@@ -4,3 +4,5 @@ Pillow==9.5.0
 python-dotenv==1.0.0
 beautifulsoup4==4.12.2
 aiohttp==3.7.4
+google==3.0.0
+gspread==5.11.1
