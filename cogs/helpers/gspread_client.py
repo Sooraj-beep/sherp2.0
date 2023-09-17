@@ -3,10 +3,8 @@ from google.oauth2 import service_account
 import gspread
 from helper import get_config
 
-__cfg = get_config().get("faq", None)
-GSHEET_URL = (
-    __cfg.get("gsheet_url") if __cfg else None
-)
+__cfg = get_config().get("faq", {})
+GSHEET_URL = __cfg.get("gsheet_url")
 
 async def get_sheet():
     f = open("sherp-service-account-key.json", "r")
