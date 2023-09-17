@@ -6,3 +6,4 @@ beautifulsoup4==4.12.2
 aiohttp==3.7.4
 google==3.0.0
 gspread==5.11.1
+pandas==2.1.0
