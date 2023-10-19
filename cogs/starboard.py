@@ -55,7 +55,7 @@ class Starboard(commands.Cog):
 
     def _get_first_viable_attachment_url(self, atmnts: List[discord.Attachment]) -> str:
         for a in atmnts:
-            if a.url.endswith(("png", "jpeg", "jpg", "gif", "webp")):
+            if a.url.split("?")[0].endswith(("png", "jpeg", "jpg", "gif", "webp")):
                 return a.url
 
     def _get_starboard_embed(self, msg: discord.Message) -> discord.Embed:
