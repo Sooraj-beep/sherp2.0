@@ -1,6 +1,7 @@
 from typing import List
 import discord
 from discord.ext import commands
+from asyncio import Lock
 
 from helper import get_config
 
@@ -28,6 +29,7 @@ class Starboard(commands.Cog):
         # Starboarded Message ID -> ID of the message the bot sent.
         self.starboard_msgs = dict()
         self.starboard_channel = bot.get_channel(STARBOARD_CHANNEL_ID)
+        self.__lock = Lock()
 
     async def cog_load(self):
         await super().cog_load()
@@ -98,12 +100,13 @@ class Starboard(commands.Cog):
         return [main_embed, reply_embed]
 
     async def create_starboard_post(self, react: discord.Reaction):
-        embeds = await self._build_embeds(react.message)
-        open_msg_view = await self._get_open_msg_view(react.message)
-        msg: discord.Message = await self.starboard_channel.send(
-            self._get_title(react), embeds=embeds, view=open_msg_view
-        )
-        self.starboard_msgs[react.message.id] = msg.id
+        async with self.__lock:
+            embeds = await self._build_embeds(react.message)
+            open_msg_view = await self._get_open_msg_view(react.message)
+            msg: discord.Message = await self.starboard_channel.send(
+                self._get_title(react), embeds=embeds, view=open_msg_view
+            )
+            self.starboard_msgs[react.message.id] = msg.id
 
     @commands.Cog.listener()
     async def on_reaction_add(self, react: discord.Reaction, _: discord.User):
@@ -119,7 +122,9 @@ class Starboard(commands.Cog):
         if react.message.id in self.starboard_msgs:
             await self.update_reaction_count(react)
         else:
-            await self.create_starboard_post(react)
+            async with self.__lock:
+                if not react.message.id in self.starboard_msgs:
+                    await self.create_starboard_post(react)
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, react: discord.Reaction, _: discord.User):
