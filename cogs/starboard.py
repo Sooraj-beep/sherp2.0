@@ -121,10 +121,11 @@ class Starboard(commands.Cog):
 
         if react.message.id in self.starboard_msgs:
             await self.update_reaction_count(react)
-        else:
-            async with self.__lock:
-                if not react.message.id in self.starboard_msgs:
-                    await self.create_starboard_post(react)
+            return
+
+        async with self.__lock:
+            if not react.message.id in self.starboard_msgs:
+                await self.create_starboard_post(react)
 
     @commands.Cog.listener()
     async def on_reaction_remove(self, react: discord.Reaction, _: discord.User):
