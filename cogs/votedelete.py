@@ -40,11 +40,11 @@ class VoteDelete(commands.Cog):
         await super().cog_load()
         print("VoteDelete loaded.")
 
-    def checks(self, reaction):
+    def checkDelete(self, reaction):
         if str(reaction.emoji) != self.votedelete_emoji_str:
             return False
         message = reaction.message
-        if reaction.count <= self.threshold:
+        if reaction.count < self.threshold:
             return False
         if message.channel.id in self.ignored_channels:
             return False
@@ -53,7 +53,7 @@ class VoteDelete(commands.Cog):
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         message = reaction.message
-        if self.checks(reaction):
+        if self.checkDelete(reaction):
             try:
                 await message.delete()
             except discord.Forbidden:
