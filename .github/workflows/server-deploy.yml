@@ -13,29 +13,19 @@ jobs:
       - name: Install SSH
         run: sudo apt-get install -y ssh
 
-      - name: Copy code to EC2 instance
-        uses: appleboy/scp-action@master
-        with:
-          host: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
-          username: 'ubuntu'
-          key: ${{ secrets.PILOT_EC2_KEY }}
-          source: '.'
-          target: '/home/ubuntu/sherp2'
+      - name: Setup SSH
+        run: |
+          echo "${{ secrets.DROPLET_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan 128.199.7.219 >> ~/.ssh/known_hosts
+        env:
+          DROPLET_KEY: ${{ secrets.DROPLET_KEY }}
 
-      - name: Rebuild bot on EC2 instance
-        uses: appleboy/ssh-action@master
-        with:
-          host: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
-          username: 'ubuntu'
-          key: ${{ secrets.PILOT_EC2_KEY }}
-          script: |
-            cd /home/ubuntu/sherp2
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            npm install pm2
-            pm2 stop sherp2
-            pip install -r requirements.txt
-            pm2 start sherp2
+      - name: Deploy code
+        run: |
+          ssh root@128.199.7.219
+          cd ~/sherp2
+          git pull origin master
 
         
 
