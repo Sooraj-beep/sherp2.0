@@ -10,8 +10,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: SSH to droplet
-        uses: appleboy/ssh-action@master
+      - name: Copy code to Droplet
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
