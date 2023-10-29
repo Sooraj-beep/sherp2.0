@@ -10,22 +10,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install SSH
-        run: sudo apt-get install -y ssh
-
-      - name: Setup SSH
-        run: |
-          echo "${{ secrets.DROPLET_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan 128.199.7.219 >> ~/.ssh/known_hosts
-        env:
-          DROPLET_KEY: ${{ secrets.DROPLET_KEY }}
-
-      - name: Deploy code
-        run: |
-          ssh root@128.199.7.219
-          cd ~/sherp2
-          git pull origin master
+      - name: SSH to droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_KEY }}
 
         
 
