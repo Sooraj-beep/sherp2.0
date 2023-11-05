@@ -50,9 +50,10 @@ class Snipe(commands.Cog):
             return
 
         sniped = []
-        for msg in msgs:
+        for deleted_msg in msgs:
+            msg = deleted_msg.msg
             author_name = f"{msg.author.display_name}({msg.author.name})"
-            heading = Embed(description=msg.msg.content, color=0x00FF00).set_author(
+            heading = Embed(description=msg.content, color=0x00FF00).set_author(
                 name=author_name, icon_url=msg.author.avatar.url
             )
             embeds = [heading]
@@ -62,7 +63,7 @@ class Snipe(commands.Cog):
             ]
             embeds.extend(attachment_embeds)
             await ctx.send(embeds=embeds, files=files)
-            sniped.append(msg)
+            sniped.append(deleted_msg)
 
         async with self.__lock:
             for msg in sniped:
