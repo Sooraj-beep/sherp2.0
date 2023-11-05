@@ -5,6 +5,7 @@ from .snipe import setup_snipe
 from .course_info import setup_course_info
 from .starboard import setup_starboard
 from .faq import setup_faq
+from .votedelete import setup_votedelete
 
 import asyncio
 from aiohttp import ClientSession
@@ -21,4 +22,5 @@ async def setup_all_cogs(bot, guilds, client=None):
         setup_course_info(bot, guilds),
         setup_starboard(bot, guilds),
         setup_faq(bot, guilds),
+        setup_votedelete(bot, guilds)
     )

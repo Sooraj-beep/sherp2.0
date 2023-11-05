@@ -1,8 +1,8 @@
-name: Deploy code to EC2 instance
+name: Deploy code to Droplet
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -10,34 +10,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install SSH
-        run: sudo apt-get install -y ssh
-
-      - name: Copy code to EC2 instance
+      - name: Copy code to Droplet
         uses: appleboy/scp-action@master
         with:
-          host: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
-          username: 'ubuntu'
-          key: ${{ secrets.PILOT_EC2_KEY }}
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_KEY }}
           source: '.'
-          target: '/home/ubuntu/sherp2'
+          target: '~/sherp2'
 
-      - name: Rebuild bot on EC2 instance
-        uses: appleboy/ssh-action@master
-        with:
-          host: "ec2-3-131-94-181.us-east-2.compute.amazonaws.com"
-          username: 'ubuntu'
-          key: ${{ secrets.PILOT_EC2_KEY }}
-          script: |
-            cd /home/ubuntu/sherp2
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            npm install pm2
-            pm2 stop sherp2
-            pip install -r requirements.txt
-            pm2 start sherp2
-
-        
-
+      # - name: 
+      #     script : |
+      #       cd ~/sherp2
+      #       export NVM_DIR=~/.nvm
+      #       source ~/.nvm/nvm.sh
+      #       npm install pm2
+      #       pm2 stop sherp2
+      #       pip install -r requirements.txt
+      #       pm2 start sherp2
 
 

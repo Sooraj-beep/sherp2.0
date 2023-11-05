@@ -23,3 +23,9 @@ threshold=1                         # The threshold over which the message is po
 [faq]
 gsheet_url = "https://docs.google.com/spreadsheets/d/15vOVv21KZETGxBEBY46H-l5C0WFjLaBUg1xUzFvSk6I/edit#gid=0" # replace this url with your gsheet url
 admin_role_name = "mod" # add the name of the role that provides users with elevated permissions to add/delete/modify FAQs
+
+[votedelete]
+
+ignored_channels = [] # Channel IDs where the bot shouldn't be able to delete messages.
+emoji = "<:ban:939740396286791741>" # The string representation of the emoji to be used to votedelete messages.
+threshold = 5 # The threshold over which the message reacted to will be deleted.
