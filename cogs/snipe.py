@@ -1,7 +1,6 @@
 import discord
 from discord import Embed, File, Attachment, Message
 from discord.ext import commands
-from datetime import datetime, timedelta
 from collections import defaultdict
 
 import asyncio
@@ -47,18 +46,27 @@ class Snipe(commands.Cog):
             msgs = self.deleted_messages[ctx.channel.id]
 
         if not msgs:
-            await ctx.send(f"Nothing found")
+            await ctx.send("Nothing found!")
             return
 
+        sniped = []
         for msg in msgs:
-            heading = Embed(description=msg.msg.content, color=0x00FF00)
-            heading.set_author(name=msg.msg.author.name)
+            author_name = f"{msg.author.display_name}({msg.author.name})"
+            heading = Embed(description=msg.msg.content, color=0x00FF00).set_author(
+                name=author_name, icon_url=msg.author.avatar.url
+            )
             embeds = [heading]
             files = [File(buf, filename=fname) for fname, buf in msg.attachments if buf]
-            embeds.extend(
-                [Embed().set_image(url=f"attachment://{f.filename}") for f in files]
-            )
+            attachment_embeds = [
+                Embed().set_image(url=f"attachment://{f.filename}") for f in files
+            ]
+            embeds.extend(attachment_embeds)
             await ctx.send(embeds=embeds, files=files)
+            sniped.append(msg)
+
+        async with self.__lock:
+            for msg in sniped:
+                msgs.remove(msg)
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
