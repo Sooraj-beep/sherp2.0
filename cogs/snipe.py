@@ -67,7 +67,7 @@ class Snipe(commands.Cog):
 
         async with self.__lock:
             for msg in sniped:
-                msgs.remove(msg)
+                msgs.discard(msg)
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
@@ -81,7 +81,7 @@ class Snipe(commands.Cog):
             self.deleted_messages[message.channel.id].add(deleted_msg)
         await asyncio.sleep(SNIPE_TIMER)
         async with self.__lock:
-            self.deleted_messages[message.channel.id].remove(deleted_msg)
+            self.deleted_messages[message.channel.id].discard(deleted_msg)
 
 
 async def setup_snipe(bot, guilds, client):
