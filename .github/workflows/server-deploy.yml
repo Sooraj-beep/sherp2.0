@@ -19,14 +19,11 @@ jobs:
           source: '.'
           target: '~/sherp2'
 
-      # - name: 
-      #     script : |
-      #       cd ~/sherp2
-      #       export NVM_DIR=~/.nvm
-      #       source ~/.nvm/nvm.sh
-      #       npm install pm2
-      #       pm2 stop sherp2
-      #       pip install -r requirements.txt
-      #       pm2 start sherp2
+      - name: Restart sherp2
+        run : |
+          cd ~/sherp2
+          pip install -r requirements.txt
+          pm2 stop sherp2
+          pm2 start sherp2
 
 
