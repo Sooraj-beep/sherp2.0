@@ -22,5 +22,5 @@ async def setup_all_cogs(bot, guilds, client=None):
         setup_course_info(bot, guilds),
         setup_starboard(bot, guilds),
         setup_faq(bot, guilds),
-        setup_votedelete(bot, guilds)
+        setup_votedelete(bot, guilds),
     )

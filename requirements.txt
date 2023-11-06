@@ -7,3 +7,4 @@ aiohttp==3.7.4
 google==3.0.0
 gspread==5.11.1
 pandas==2.1.0
+pre-commit==3.5.0
