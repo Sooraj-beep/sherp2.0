@@ -23,7 +23,7 @@ class Snipe(commands.Cog):
     def __init__(self, bot, http_client):
         self.__bot = bot
         self.http = http_client
-        self.deleted_messages = defaultdict(lambda: set())
+        self.deleted_messages = defaultdict(lambda: dict())
         self.__lock = asyncio.Lock()
 
     async def cog_load(self):
@@ -49,7 +49,7 @@ class Snipe(commands.Cog):
                 return
             msgs = deleted_msgs.copy()
 
-        for deleted_msg in msgs:
+        for _, deleted_msg in msgs.items():
             msg = deleted_msg.msg
             author_name = f"{msg.author.display_name}({msg.author.name})"
             heading = Embed(description=msg.content, color=0x00FF00).set_author(
@@ -66,7 +66,7 @@ class Snipe(commands.Cog):
         async with self.__lock:
             deleted_msgs = self.deleted_messages[ctx.channel.id]
             for msg in msgs:
-                deleted_msgs.discard(msg)
+                deleted_msgs.pop(msg, None)
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
@@ -77,10 +77,10 @@ class Snipe(commands.Cog):
             )
         deleted_msg = DeletedMsg(message, attachments)
         async with self.__lock:
-            self.deleted_messages[message.channel.id].add(deleted_msg)
+            self.deleted_messages[message.channel.id][message.id] = deleted_msg
         await asyncio.sleep(SNIPE_TIMER)
         async with self.__lock:
-            self.deleted_messages[message.channel.id].discard(deleted_msg)
+            self.deleted_messages[message.channel.id].pop(message.id, None)
 
 
 async def setup_snipe(bot, guilds, client):
