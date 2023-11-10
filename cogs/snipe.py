@@ -43,13 +43,12 @@ class Snipe(commands.Cog):
     async def snipe(self, ctx):
         msgs = None
         async with self.__lock:
-            msgs = self.deleted_messages[ctx.channel.id].copy()
+            deleted_msgs = self.deleted_messages[ctx.channel.id]
+            if not deleted_msgs:
+                await ctx.send("Nothing found!")
+                return
+            msgs = deleted_msgs.copy()
 
-        if not msgs:
-            await ctx.send("Nothing found!")
-            return
-
-        sniped = []
         for deleted_msg in msgs:
             msg = deleted_msg.msg
             author_name = f"{msg.author.display_name}({msg.author.name})"
@@ -63,12 +62,11 @@ class Snipe(commands.Cog):
             ]
             embeds.extend(attachment_embeds)
             await ctx.send(embeds=embeds, files=files)
-            sniped.append(deleted_msg)
 
         async with self.__lock:
-            msgs = self.deleted_messages[ctx.channel.id]
-            for msg in sniped:
-                msgs.discard(msg)
+            deleted_msgs = self.deleted_messages[ctx.channel.id]
+            for msg in msgs:
+                deleted_msgs.discard(msg)
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
