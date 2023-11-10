@@ -66,6 +66,7 @@ class Snipe(commands.Cog):
             sniped.append(deleted_msg)
 
         async with self.__lock:
+            msgs = self.deleted_messages[ctx.channel.id]
             for msg in sniped:
                 msgs.discard(msg)
 
