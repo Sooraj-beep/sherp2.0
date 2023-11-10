@@ -43,7 +43,7 @@ class Snipe(commands.Cog):
     async def snipe(self, ctx):
         msgs = None
         async with self.__lock:
-            msgs = self.deleted_messages[ctx.channel.id]
+            msgs = self.deleted_messages[ctx.channel.id].copy()
 
         if not msgs:
             await ctx.send("Nothing found!")
