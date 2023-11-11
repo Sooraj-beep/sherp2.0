@@ -74,4 +74,3 @@ async def on_message(message: discord.Message):
 
 # run the bot using the token in the .env file
 client.run(os.getenv("BOT_TOKEN"))
-
