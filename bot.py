@@ -11,7 +11,7 @@ from cogs import setup_all_cogs
 from typing import Optional
 
 
-SHERP_ID = "212613981465083906"
+SHERP_ID = '212613981465083906'
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
 __DEFAULT_GUILDS = [402891511991369740]  # UAlberta CS server ID
 
