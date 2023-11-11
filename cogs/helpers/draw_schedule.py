@@ -32,7 +32,7 @@ color_scheme = (
     DARKBLUE,
     CYAN,
 )
-day_lookup = {"U": 0, "M": 1, "T": 2, "W": 3, "H": 4, "F": 5, "S": 6}
+day_lookup = {"U": 0, "M": 1, "T": 2, "W": 3, "R": 4, "F": 5, "S": 6}
 
 __draw_sched_font = ImageFont.truetype("cogs/helpers/fonts/tahoma.ttf", 19)
 
