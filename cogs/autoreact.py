@@ -5,6 +5,7 @@ from datetime import datetime
 
 RATE_LIMIT = 3  # seconds
 
+
 class AutoReact(commands.GroupCog, name="autoreact"):
     def __init__(self):
         super().__init__()
@@ -21,11 +22,13 @@ class AutoReact(commands.GroupCog, name="autoreact"):
 
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message):
-        if msg.author.bot: return
+        if msg.author.bot:
+            return
         if reaction := self.mappings.get(msg.author.id, None):
             if datetime.now().timestamp() - self.last_reacted > RATE_LIMIT:
                 await msg.add_reaction(reaction)
                 self.last_reacted = datetime.now().timestamp()
+
 
 async def setup_autoreact(bot, guilds):
     cog = AutoReact()
