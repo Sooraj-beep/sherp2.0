@@ -68,6 +68,10 @@ class Misc(commands.Cog):
 
     @commands.command(name="zipit")
     async def zip_it(self, ctx, duration=""):
+        if duration == "":
+            await ctx.send("No duration set")
+            return
+
         patterns = {
             "days": {"pattern": r"(\d+)\s*(d|day)s?", "duration": 60 * 24},
             "hours": {"pattern": r"(\d+)\s*(h|hr|hour)s?", "duration": 60},
@@ -81,15 +85,15 @@ class Misc(commands.Cog):
                 value = int(match.group(1)) * v["duration"]
                 total_duration += datetime.timedelta(minutes=value)
 
-        if total_duration.total_seconds == 0:
-            await ctx.send(f"Invalid duration: {duration}")
+        if total_duration.seconds == 0:
+            await ctx.send(f"Invalid duration: `{duration}`")
             return
 
         try:
             await ctx.author.timeout(total_duration, reason="Self timeout via sherp2.0")
-            await ctx.send(f"Timed out {ctx.author.nick}")
+            await ctx.send(f"Timed out {ctx.author.name}")
         except discord.Forbidden:
-            await ctx.send(f"Cannot timeout {ctx.author.nick}: No permission")
+            await ctx.send(f"Cannot timeout {ctx.author.name}: No permission")
 
 
 async def setup_misc_cog(bot, guilds):
