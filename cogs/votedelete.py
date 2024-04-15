@@ -51,11 +51,9 @@ class VoteDelete(commands.Cog):
         return True
 
     @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
-        channel = self.bot.get_channel(payload.channel_id)
-        message = await channel.fetch_message(payload.message_id)
-
-        if any(self.checkDelete(reaction) for reaction in message.reactions):
+    async def on_reaction_add(self, reaction, user):
+        message = reaction.message
+        if self.checkDelete(reaction):
             try:
                 await message.delete()
             except discord.Forbidden:
