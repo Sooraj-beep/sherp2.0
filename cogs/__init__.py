@@ -6,6 +6,7 @@ from .course_info import setup_course_info
 from .starboard import setup_starboard
 from .faq import setup_faq
 from .votedelete import setup_votedelete
+from .sherpmail import setup_SherpMailbox_cog
 
 import asyncio
 from aiohttp import ClientSession
@@ -23,4 +24,5 @@ async def setup_all_cogs(bot, guilds, client=None):
         setup_starboard(bot, guilds),
         setup_faq(bot, guilds),
         setup_votedelete(bot, guilds),
+        setup_SherpMailbox_cog(bot, guilds)
     )
