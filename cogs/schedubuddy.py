@@ -163,16 +163,16 @@ class Schedubuddy(commands.GroupCog, name="schedubuddy"):
 
     def get_term_id(self, year: str, term: str):
         match (year.value, term.value):
-            case ("2023", "Winter"):
-                return "1820"
-            case ("2023", "Spring"):
-                return "1830"
-            case ("2024", "Summer"):
-                return "1840"
-            case ("2023", "Fall"):
-                return "1850"
             case ("2024", "Winter"):
                 return "1860"
+            case ("2024", "Spring"):
+                return "1870"
+            case ("2024", "Summer"):
+                return "1880"
+            case ("2024", "Fall"):
+                return "1890"
+            case ("2025", "Winter"):
+                return "1900"
             case _:
                 return ""
 
@@ -192,8 +192,8 @@ class Schedubuddy(commands.GroupCog, name="schedubuddy"):
     @app_commands.describe(year="The year to view the schedule for.")
     @app_commands.choices(
         year=[
-            app_commands.Choice(name="2023", value="2023"),
             app_commands.Choice(name="2024", value="2024"),
+            app_commands.Choice(name="2025", value="2025"),
         ]
     )
     @app_commands.describe(room="The room to view the schedule for. Eg CAB 239")
@@ -241,8 +241,8 @@ class Schedubuddy(commands.GroupCog, name="schedubuddy"):
     @app_commands.describe(year="The year to view the schedule for.")
     @app_commands.choices(
         year=[
-            app_commands.Choice(name="2023", value="2023"),
             app_commands.Choice(name="2024", value="2024"),
+            app_commands.Choice(name="2025", value="2025"),
         ]
     )
     @app_commands.describe(
