@@ -23,7 +23,6 @@ STARBOARD_THESHOLD = (
 
 class Starboard(commands.Cog):
     def __init__(self, bot: discord.Client):
-        self.bot = bot
         self.starboard_emoji_str = STARBOARD_EMOJI_STR
         self.threshold = STARBOARD_THESHOLD
         # Starboarded Message ID -> ID of the message the bot sent.
@@ -107,39 +106,30 @@ class Starboard(commands.Cog):
         self.starboard_msgs[react.message.id] = msg.id
 
     @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
-        channel = self.bot.get_channel(payload.channel_id)
-
-        if channel.is_nsfw():
+    async def on_reaction_add(self, react: discord.Reaction, _: discord.User):
+        if str(react.emoji) != self.starboard_emoji_str:
             return
 
-        message = await channel.fetch_message(payload.message_id)
+        if react.message.channel.is_nsfw():
+            return
 
-        for react in message.reactions:
-            if str(react.emoji) != self.starboard_emoji_str:
-                continue
+        if react.count < self.threshold:
+            return
 
-            if react.count < self.threshold:
-                continue
-
-            if react.message.id in self.starboard_msgs:
-                await self.update_reaction_count(react)
-            else:
-                await self.create_starboard_post(react)
+        if react.message.id in self.starboard_msgs:
+            await self.update_reaction_count(react)
+        else:
+            await self.create_starboard_post(react)
 
     @commands.Cog.listener()
-    async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
-        channel = self.bot.get_channel(payload.channel_id)
-        message = await channel.fetch_message(payload.message_id)
+    async def on_reaction_remove(self, react: discord.Reaction, _: discord.User):
+        if str(react.emoji) != self.starboard_emoji_str:
+            return
 
-        for react in message.reactions:
-            if str(react.emoji) != self.starboard_emoji_str:
-                continue
+        if not react.message.id in self.starboard_msgs:
+            return
 
-            if not react.message.id in self.starboard_msgs:
-                continue
-
-            await self.update_reaction_count(react)
+        await self.update_reaction_count(react)
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg: discord.Message):
