@@ -26,6 +26,6 @@ async def setup_all_cogs(bot, guilds, client=None):
         setup_starboard(bot, guilds),
         setup_faq(bot, guilds),
         setup_votedelete(bot, guilds),
-        setup_SherpMailbox_cog(bot, guilds)
+        setup_SherpMailbox_cog(bot, guilds),
         setup_ship(bot, guilds)
     )
