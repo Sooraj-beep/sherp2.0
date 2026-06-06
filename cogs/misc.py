@@ -29,6 +29,17 @@ class Misc(commands.Cog):
         embed.set_image(url="https://cdn.discordapp.com/attachments/968245983697842196/1101298256459346000/IMG_2316.jpg")
         await ctx.send(embed=embed)
 
+    @commands.hybrid_command(name="bbq25", description="Post the BBQ 25 group photo.")
+    async def bbq25(self, ctx):
+        embed = discord.Embed(
+            title="BBQ 25",
+            color=3447003,
+            description="Another bunch of gigachads together",
+        )
+        file = discord.File("attachments/bbq25.jpeg", filename="bbq25.jpeg")
+        embed.set_image(url="attachment://bbq25.jpeg")
+        await ctx.send(embed=embed, file=file)
+
     @commands.hybrid_command(name="bbq26", description="Post the BBQ 26 group photo.")
     async def bbq26(self, ctx):
         embed = discord.Embed(
