@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 from discord.ext import commands
 import json
 from dotenv import load_dotenv
@@ -10,7 +11,6 @@ from helper import get_config
 from cogs import setup_all_cogs
 from typing import Optional
 
-
 SHERP_ID = "212613981465083906"
 SHERP_URL = "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif"
 __DEFAULT_GUILDS = [402891511991369740]  # UAlberta CS server ID
@@ -20,9 +20,7 @@ load_dotenv()
 # create a client with all intents
 app_id = os.getenv("DISCORD_APP_ID")
 
-client = commands.Bot(
-    command_prefix="?", intents=discord.Intents.all(), application_id=app_id
-)
+client = commands.Bot(command_prefix="?", intents=discord.Intents.all(), application_id=app_id)
 
 
 __cfg = get_config().get("general", None)
@@ -43,6 +41,36 @@ with open("data/commands.json", "r", encoding="utf-8") as f:
     cmds = json.load(f)
 with open("data/copypasta.json", "r", encoding="utf-8") as f:
     pastas = json.load(f)
+
+
+def slash_command_description(command_name: str) -> str:
+    return f"Run the {command_name} command."
+
+
+def make_trivial_slash_command(command_name: str, response: str):
+    async def callback(interaction: discord.Interaction):
+        await interaction.response.send_message(response)
+
+    callback.__name__ = f"slash_{command_name.replace('-', '_')}"
+    return app_commands.Command(
+        name=command_name,
+        description=slash_command_description(command_name),
+        callback=callback,
+    )
+
+
+for command, response in cmds.items():
+    if not command.startswith("?"):
+        continue
+    client.tree.add_command(
+        make_trivial_slash_command(command[1:], response),
+        guilds=GUILDS,
+    )
+
+
+@client.tree.command(name="pasta", description="Send a random copypasta.", guilds=GUILDS)
+async def pasta_slash(interaction: discord.Interaction):
+    await interaction.response.send_message(random.choice(pastas))
 
 
 # A command is trivial if its response is static string. These commands can

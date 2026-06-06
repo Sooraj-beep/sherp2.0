@@ -38,15 +38,11 @@ class LeaderboardView(discord.ui.View):
             elif i == 3:
                 medal = "🥉 "
 
-            leaderboard_text.append(
-                f"{medal}**{i}.** <@{user_id}> - **{count:,}** messages"
-            )
+            leaderboard_text.append(f"{medal}**{i}.** <@{user_id}> - **{count:,}** messages")
 
         embed.add_field(
             name="Rankings",
-            value=(
-                "\n".join(leaderboard_text) if leaderboard_text else "No data available"
-            ),
+            value=("\n".join(leaderboard_text) if leaderboard_text else "No data available"),
             inline=False,
         )
 
@@ -61,33 +57,25 @@ class LeaderboardView(discord.ui.View):
         self.last_page.disabled = self.current_page == self.max_page
 
     @discord.ui.button(label="<<", style=discord.ButtonStyle.secondary)
-    async def first_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+    async def first_page(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.current_page = 0
         self.update_buttons()
         await interaction.response.edit_message(embed=self.get_embed(), view=self)
 
     @discord.ui.button(label="<", style=discord.ButtonStyle.primary)
-    async def prev_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+    async def prev_page(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.current_page = max(0, self.current_page - 1)
         self.update_buttons()
         await interaction.response.edit_message(embed=self.get_embed(), view=self)
 
     @discord.ui.button(label=">", style=discord.ButtonStyle.primary)
-    async def next_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+    async def next_page(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.current_page = min(self.max_page, self.current_page + 1)
         self.update_buttons()
         await interaction.response.edit_message(embed=self.get_embed(), view=self)
 
     @discord.ui.button(label=">>", style=discord.ButtonStyle.secondary)
-    async def last_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+    async def last_page(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.current_page = self.max_page
         self.update_buttons()
         await interaction.response.edit_message(embed=self.get_embed(), view=self)
@@ -107,9 +95,7 @@ class Leaderboard(commands.Cog):
         await super().cog_load()
         print("Leaderboard Cog loaded.")
 
-    async def count_channel_messages(
-        self, channel, user, after_date=None, completed_callback=None
-    ) -> int:
+    async def count_channel_messages(self, channel, user, after_date=None, completed_callback=None) -> int:
         """Count messages for a user in a single channel"""
         try:
             channel_count = 0
@@ -161,18 +147,10 @@ class Leaderboard(commands.Cog):
     ) -> int:
         """Get total message count for a user in a guild using filtered history"""
         # Get all channels that can contain messages
-        channels = [
-            channel
-            for channel in guild.channels
-            if isinstance(channel, (discord.TextChannel, discord.Thread))
-        ]
+        channels = [channel for channel in guild.channels if isinstance(channel, (discord.TextChannel, discord.Thread))]
 
         # Get forum channels separately to handle their threads
-        forum_channels = [
-            channel
-            for channel in guild.channels
-            if isinstance(channel, discord.ForumChannel)
-        ]
+        forum_channels = [channel for channel in guild.channels if isinstance(channel, discord.ForumChannel)]
 
         # Count accessible channels first (only check bot permissions)
         accessible_channels = []
@@ -207,9 +185,7 @@ class Leaderboard(commands.Cog):
 
         # Debug info
         print(f"\nCounting messages for {user.name} in {guild.name}")
-        print(
-            f"Total channels to check: {len(accessible_channels)} text channels, {len(all_threads)} threads"
-        )
+        print(f"Total channels to check: {len(accessible_channels)} text channels, {len(all_threads)} threads")
 
         if total_channels == 0:
             return 0
@@ -226,11 +202,7 @@ class Leaderboard(commands.Cog):
             tasks = []
             for channel in batch:
                 # Create a task for each channel
-                task = asyncio.create_task(
-                    self.count_channel_messages(
-                        channel, user, after_date, channel_completed_callback
-                    )
-                )
+                task = asyncio.create_task(self.count_channel_messages(channel, user, after_date, channel_completed_callback))
                 tasks.append(task)
 
             # Wait for all tasks in this batch to complete
@@ -250,9 +222,7 @@ class Leaderboard(commands.Cog):
         print(f"Total count for {user.name}: {total_count} messages\n")
         return total_count
 
-    async def get_leaderboard_data(
-        self, guild: discord.Guild, channel: discord.TextChannel
-    ) -> List[Tuple[str, int]]:
+    async def get_leaderboard_data(self, guild: discord.Guild, channel: discord.TextChannel) -> List[Tuple[str, int]]:
         """Get sorted leaderboard data for a guild by fetching message counts"""
         # Get all members in the guild
         members = [m for m in guild.members if not m.bot]
@@ -263,18 +233,12 @@ class Leaderboard(commands.Cog):
 
         # Add text channels and threads
         for ch in guild.channels:
-            if (
-                isinstance(ch, (discord.TextChannel, discord.Thread))
-                and ch.permissions_for(guild.me).read_messages
-            ):
+            if isinstance(ch, (discord.TextChannel, discord.Thread)) and ch.permissions_for(guild.me).read_messages:
                 all_channels_to_process.append(ch)
 
         # Add forum threads
         forum_channels = [
-            ch
-            for ch in guild.channels
-            if isinstance(ch, discord.ForumChannel)
-            and ch.permissions_for(guild.me).read_messages
+            ch for ch in guild.channels if isinstance(ch, discord.ForumChannel) and ch.permissions_for(guild.me).read_messages
         ]
 
         for forum in forum_channels:
@@ -305,9 +269,7 @@ class Leaderboard(commands.Cog):
             color=discord.Color.gold(),
         )
         loading_embed.add_field(name="Overall Progress", value="0%", inline=True)
-        loading_embed.add_field(
-            name="Users Completed", value="0 / " + str(total_users), inline=True
-        )
+        loading_embed.add_field(name="Users Completed", value="0 / " + str(total_users), inline=True)
         loading_embed.add_field(
             name="Channels Processed",
             value="0 / " + str(total_channels_to_process),
@@ -343,9 +305,7 @@ class Leaderboard(commands.Cog):
             # Read values while holding the lock
             async with work_lock:
                 progress_percent = (
-                    int((channels_processed / total_channels_to_process) * 100)
-                    if total_channels_to_process > 0
-                    else 0
+                    int((channels_processed / total_channels_to_process) * 100) if total_channels_to_process > 0 else 0
                 )
                 # Cap progress at 100% to avoid confusion
                 progress_percent = min(progress_percent, 100)
@@ -353,9 +313,7 @@ class Leaderboard(commands.Cog):
                 current_processed = channels_processed
 
             # Update embed fields without holding the lock
-            loading_embed.set_field_at(
-                0, name="Overall Progress", value=f"{progress_percent}%", inline=True
-            )
+            loading_embed.set_field_at(0, name="Overall Progress", value=f"{progress_percent}%", inline=True)
             loading_embed.set_field_at(
                 1,
                 name="Users Completed",
@@ -377,9 +335,7 @@ class Leaderboard(commands.Cog):
         async def process_user(member):
             """Process a single user and return their count"""
             nonlocal completed_users
-            count = await self.get_user_message_count(
-                guild, member, None, None, increment_work_units
-            )
+            count = await self.get_user_message_count(guild, member, None, None, increment_work_units)
 
             # Increment completed users
             async with work_lock:
@@ -417,15 +373,9 @@ class Leaderboard(commands.Cog):
         # Update to show we're finalizing
         try:
             loading_embed.clear_fields()
-            loading_embed.description = (
-                "All users processed! Preparing final leaderboard..."
-            )
-            loading_embed.add_field(
-                name="Status", value="✅ Sorting results...", inline=False
-            )
-            loading_embed.add_field(
-                name="Users Processed", value=f"{total_users} users", inline=True
-            )
+            loading_embed.description = "All users processed! Preparing final leaderboard..."
+            loading_embed.add_field(name="Status", value="✅ Sorting results...", inline=False)
+            loading_embed.add_field(name="Users Processed", value=f"{total_users} users", inline=True)
             loading_embed.add_field(
                 name="Total Channels Processed",
                 value=f"{channels_processed} channels",
@@ -466,10 +416,24 @@ class Leaderboard(commands.Cog):
         """Slash command to display the message count leaderboard"""
         await self.show_leaderboard(interaction, interaction.guild, interaction.channel)
 
+    @app_commands.command(
+        name="lb",
+        description="Display the message count leaderboard for this server",
+    )
+    async def leaderboard_lb_slash(self, interaction: discord.Interaction):
+        """Slash alias for leaderboard"""
+        await self.show_leaderboard(interaction, interaction.guild, interaction.channel)
+
+    @app_commands.command(
+        name="top",
+        description="Display the message count leaderboard for this server",
+    )
+    async def leaderboard_top_slash(self, interaction: discord.Interaction):
+        """Slash alias for leaderboard"""
+        await self.show_leaderboard(interaction, interaction.guild, interaction.channel)
+
     # Common method for both prefix and slash commands
-    async def show_leaderboard(
-        self, ctx_or_interaction, guild: discord.Guild, channel: discord.TextChannel
-    ):
+    async def show_leaderboard(self, ctx_or_interaction, guild: discord.Guild, channel: discord.TextChannel):
         """Display the leaderboard for a guild"""
         # Get message counts for this guild
         sorted_users = await self.get_leaderboard_data(guild, channel)
@@ -492,17 +456,13 @@ class Leaderboard(commands.Cog):
 
         # Send initial embed with view
         if isinstance(ctx_or_interaction, discord.Interaction):
-            await ctx_or_interaction.response.send_message(
-                embed=view.get_embed(), view=view
-            )
+            await ctx_or_interaction.response.send_message(embed=view.get_embed(), view=view)
         else:
             await ctx_or_interaction.send(embed=view.get_embed(), view=view)
 
     # Prefix command for message count
     @commands.command(name="messagecount", aliases=["mc", "mycount"])
-    async def message_count_prefix(
-        self, ctx: commands.Context, member: discord.Member = None
-    ):
+    async def message_count_prefix(self, ctx: commands.Context, member: discord.Member = None):
         """Check message count for yourself or another member"""
         if member is None:
             member = ctx.author
@@ -514,22 +474,40 @@ class Leaderboard(commands.Cog):
         name="messagecount",
         description="Check message count for yourself or another member",
     )
-    @app_commands.describe(
-        member="The member to check message count for (defaults to yourself)"
-    )
-    async def message_count_slash(
-        self, interaction: discord.Interaction, member: Optional[discord.Member] = None
-    ):
+    @app_commands.describe(member="The member to check message count for (defaults to yourself)")
+    async def message_count_slash(self, interaction: discord.Interaction, member: Optional[discord.Member] = None):
         """Slash command to check message count"""
         if member is None:
             member = interaction.user
 
         await self.show_message_count(interaction, interaction.guild, member)
 
+    @app_commands.command(
+        name="mc",
+        description="Check message count for yourself or another member",
+    )
+    @app_commands.describe(member="The member to check message count for (defaults to yourself)")
+    async def message_count_mc_slash(self, interaction: discord.Interaction, member: Optional[discord.Member] = None):
+        """Slash alias for message count"""
+        if member is None:
+            member = interaction.user
+
+        await self.show_message_count(interaction, interaction.guild, member)
+
+    @app_commands.command(
+        name="mycount",
+        description="Check message count for yourself or another member",
+    )
+    @app_commands.describe(member="The member to check message count for (defaults to yourself)")
+    async def message_count_mycount_slash(self, interaction: discord.Interaction, member: Optional[discord.Member] = None):
+        """Slash alias for message count"""
+        if member is None:
+            member = interaction.user
+
+        await self.show_message_count(interaction, interaction.guild, member)
+
     # Common method for both prefix and slash commands
-    async def show_message_count(
-        self, ctx_or_interaction, guild: discord.Guild, member: discord.Member
-    ):
+    async def show_message_count(self, ctx_or_interaction, guild: discord.Guild, member: discord.Member):
         """Display message count for a member"""
         # Send loading message
         loading_embed = discord.Embed(

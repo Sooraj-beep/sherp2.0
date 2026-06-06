@@ -39,7 +39,7 @@ class Snipe(commands.Cog):
             buf.seek(0)
             return attachment.filename, buf
 
-    @commands.command(name="snipe")
+    @commands.hybrid_command(name="snipe", description="Show recently deleted messages.")
     async def snipe(self, ctx):
         msgs = None
         async with self.__lock:
@@ -52,14 +52,10 @@ class Snipe(commands.Cog):
         for _, deleted_msg in msgs.items():
             msg = deleted_msg.msg
             author_name = f"{msg.author.display_name}({msg.author.name})"
-            heading = Embed(description=msg.content, color=0x00FF00).set_author(
-                name=author_name, icon_url=msg.author.avatar.url
-            )
+            heading = Embed(description=msg.content, color=0x00FF00).set_author(name=author_name, icon_url=msg.author.avatar.url)
             embeds = [heading]
             files = [File(buf, filename=fname) for fname, buf in msg.attachments if buf]
-            attachment_embeds = [
-                Embed().set_image(url=f"attachment://{f.filename}") for f in files
-            ]
+            attachment_embeds = [Embed().set_image(url=f"attachment://{f.filename}") for f in files]
             embeds.extend(attachment_embeds)
             await ctx.send(embeds=embeds, files=files)
 
@@ -72,9 +68,7 @@ class Snipe(commands.Cog):
     async def on_message_delete(self, message: discord.Message):
         attachments = []
         if message.attachments:
-            attachments = await asyncio.gather(
-                *[self.save_attachment(a) for a in message.attachments]
-            )
+            attachments = await asyncio.gather(*[self.save_attachment(a) for a in message.attachments])
         deleted_msg = DeletedMsg(message, attachments)
         async with self.__lock:
             self.deleted_messages[message.channel.id][message.id] = deleted_msg
