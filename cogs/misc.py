@@ -34,7 +34,7 @@ class Misc(commands.Cog):
         embed = discord.Embed(
             title="BBQ 25",
             color=3447003,
-            description="Another bunch of gigachads together",
+            description="Here's a bunch of <:OnPhone:1062142401973588039> investors together",
         )
         file = discord.File("attachments/bbq25.jpeg", filename="bbq25.jpeg")
         embed.set_image(url="attachment://bbq25.jpeg")
@@ -45,7 +45,7 @@ class Misc(commands.Cog):
         embed = discord.Embed(
             title="BBQ 26",
             color=3447003,
-            description="Another bunch of gigachads together",
+            description="Here's a bunch of gooners together",
         )
         file = discord.File("attachments/bbq26.jpeg", filename="bbq26.jpeg")
         embed.set_image(url="attachment://bbq26.jpeg")
