@@ -8,7 +8,6 @@ from .faq import setup_faq
 from .votedelete import setup_votedelete
 from .sherpmail import setup_SherpMailbox_cog
 from .ship import setup_ship
-from .leaderboard import setup_leaderboard
 
 
 import asyncio
@@ -29,5 +28,4 @@ async def setup_all_cogs(bot, guilds, client=None):
         setup_votedelete(bot, guilds),
         setup_SherpMailbox_cog(bot, guilds),
         setup_ship(bot, guilds),
-        setup_leaderboard(bot, guilds),
     )
